@@ -10,6 +10,12 @@
   font-weight: 400;
   src: url(../fonts/rockwell.ttf) format('truetype');
 }
+@font-face {
+  font-family: 'OpenDyslexic';
+  font-style: normal;
+  font-weight: 400;
+  src: url(../fonts/opendyslexic.otf) format('truetype');
+}
 
 
 body{
@@ -164,4 +170,9 @@ code, kbd{
 .paper_image{
     border-radius: 5px;
     box-shadow: 3px 3px 10px #cccccc;
+}
+.dyslexic-friendly {
+    font-family: 'OpenDyslexic', serif;
+    font-size: 16px;
+    color: #5e5e5e;
 }
