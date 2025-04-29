@@ -1,0 +1,103 @@
+/* Custom additional styles */
+.blog-column {
+    background-color: #ffffff;
+}
+
+/* Homepage styles */
+.accent-text {
+    color: #ff5733;
+}
+
+.featured-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    padding: 20px;
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+}
+
+.featured-card:hover {
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    transform: translateY(-5px);
+}
+
+/* List item spacing */
+li {
+    margin-bottom: 12px;
+    padding: 5px 0;
+}
+
+li:last-child {
+    margin-bottom: 0;
+}
+
+ul {
+    padding-left: 5px;
+}
+
+/* Spaced list for academic services */
+.spaced-list li {
+    margin-bottom: 16px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.spaced-list li:last-child {
+    border-bottom: none;
+}
+
+.spaced-list strong {
+    color: #ff5733;
+    margin-right: 5px;
+    display: inline-block;
+}
+
+/* Social icons */
+.social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-right: 10px;
+    transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+    background-color: #ff5733;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(255,87,51,0.25);
+}
+
+/* Button styles */
+.action-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #ff5733;
+    color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(255,87,51,0.25);
+    transition: all 0.3s ease;
+    text-align: center;
+    font-weight: 500;
+}
+
+.action-button:hover {
+    background-color: #e64a19;
+    box-shadow: 0 6px 16px rgba(255,87,51,0.35);
+    transform: translateY(-2px);
+}
+
+/* Profile circle */
+.profile-circle {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    margin: 0 auto;
+} 
