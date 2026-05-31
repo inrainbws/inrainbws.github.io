@@ -1,0 +1,733 @@
+---
+permalink: /twnw/
+redirect_from:
+  - /twnw
+---
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台湾新浪潮电影放映计划 | Taiwan New Wave Cinema Planner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .controls {
+            padding: 30px 40px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        select, button {
+            padding: 10px 20px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        select {
+            background: white;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-left: auto;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .calendar-container {
+            padding: 40px;
+        }
+
+        .month-section {
+            margin-bottom: 50px;
+        }
+
+        .month-header {
+            font-size: 2em;
+            font-weight: 700;
+            color: #2a5298;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .week-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .day-header {
+            text-align: center;
+            font-weight: 600;
+            color: #6c757d;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .day-cell {
+            min-height: 150px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 12px;
+            background: white;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .day-cell:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .day-cell.empty {
+            background: #f8f9fa;
+            border-style: dashed;
+        }
+
+        .day-number {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #495057;
+            margin-bottom: 10px;
+        }
+
+        .screening {
+            background: #e7f3ff;
+            border: 2px solid #90caf9;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .screening:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+        }
+
+        .screening.special {
+            background: #fff3e0;
+            border-color: #ffb74d;
+        }
+
+        .screening.going {
+            background: #c8e6c9;
+            border-color: #66bb6a;
+            box-shadow: 0 0 0 3px rgba(102, 187, 106, 0.2);
+        }
+
+        .screening.going::after {
+            content: '✓';
+            position: absolute;
+            top: 5px;
+            right: 8px;
+            color: #2e7d32;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .screening-time {
+            font-weight: 700;
+            color: #1976d2;
+            font-size: 0.95em;
+            margin-bottom: 5px;
+        }
+
+        .screening.special .screening-time {
+            color: #f57c00;
+        }
+
+        .screening.going .screening-time {
+            color: #2e7d32;
+        }
+
+        .screening-title {
+            font-size: 0.9em;
+            color: #424242;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .screening-venue {
+            font-size: 0.75em;
+            color: #757575;
+            display: inline-block;
+            background: rgba(0,0,0,0.05);
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-top: 4px;
+        }
+
+        .screening-director {
+            font-size: 0.8em;
+            color: #616161;
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        .special-badge {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7em;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .empty-state svg {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        footer {
+            background: #2a5298;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        footer a {
+            color: #ffd700;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 1200px) {
+            .week-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .week-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .legend {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .week-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎬 台湾新浪潮电影放映计划</h1>
+            <div class="subtitle">Taiwan New Wave Cinema Planner</div>
+            <div class="subtitle">瑞士电影资料馆 · Cinémathèque suisse · 2025</div>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalScreenings">0</div>
+                    <div class="stat-label">总场次</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="goingCount">0</div>
+                    <div class="stat-label">已计划观看</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="specialCount">0</div>
+                    <div class="stat-label">特别活动</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="controls">
+            <div class="filter-group">
+                <label>导演筛选：</label>
+                <select id="directorFilter">
+                    <option value="all">所有导演</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>影厅筛选：</label>
+                <select id="venueFilter">
+                    <option value="all">所有影厅</option>
+                    <option value="CAP 1">CAP 1</option>
+                    <option value="CAP 2">CAP 2</option>
+                </select>
+            </div>
+            <button onclick="clearAllSelections()">清除所有选择</button>
+            <button onclick="exportToCalendar()">导出我的计划</button>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #e7f3ff; border: 2px solid #90caf9;"></div>
+                    <span>常规放映</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #fff3e0; border: 2px solid #ffb74d;"></div>
+                    <span>特别活动</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #c8e6c9; border: 2px solid #66bb6a;"></div>
+                    <span>已计划观看</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="calendar-container" id="calendar"></div>
+
+        <footer>
+            <p><strong>瑞士电影资料馆 Cinémathèque suisse</strong></p>
+            <p>Casino de Montbenon, Lausanne</p>
+            <p style="margin-top: 15px;">
+                <a href="https://live.cinematheque.ch/cycle/2266-les-nouvelles-vagues-tawanaises" target="_blank">
+                    查看官方网站 Visit Official Site →
+                </a>
+            </p>
+            <p style="margin-top: 10px; font-size: 0.9em; opacity: 0.8;">
+                点击任何放映场次标记为"计划观看" · Click any screening to mark as "Going"
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        const screeningsData = [
+            // November 2025
+            { date: '2025-11-14', time: '20:00', venue: 'CAP 1', title: '千禧曼波', titleEn: 'Millennium Mambo', director: '侯孝贤' },
+            { date: '2025-11-21', time: '20:00', venue: 'TBD', title: '一一', titleEn: 'Yi Yi', director: '杨德昌', special: true, specialNote: '由Jean-Michel Frodon主持' },
+            { date: '2025-11-22', time: '15:00', venue: 'CAP 1', title: '恐怖分子', titleEn: 'Terrorizers', director: '杨德昌', special: true, specialNote: '由Jean-Michel Frodon主持' },
+            { date: '2025-11-22', time: '18:00', venue: 'CAP 2', title: '恐怖分子', titleEn: 'Terrorizers', director: '杨德昌' },
+            { date: '2025-11-26', time: '17:30', venue: 'CAP 1', title: '在那河畔青草青', titleEn: 'Green, Green Grass of Home', director: '侯孝贤' },
+            { date: '2025-11-27', time: '18:30', venue: 'CAP 1', title: '在那河畔青草青', titleEn: 'Green, Green Grass of Home', director: '侯孝贤' },
+            
+            // December 2025
+            { date: '2025-12-02', time: '20:00', venue: 'CAP 1', title: '魔法阿妈（修复版）', titleEn: 'Grandma and Her Ghosts', director: '王小棣', special: true, specialNote: '导演王小棣将出席' },
+            { date: '2025-12-04', time: '17:30', venue: 'CAP 2', title: '小逃犯', titleEn: 'Teenage Fugitive', director: '张佩成' },
+            { date: '2025-12-04', time: '20:45', venue: 'CAP 2', title: '小逃犯', titleEn: 'Teenage Fugitive', director: '张佩成' },
+            { date: '2025-12-05', time: '18:00', venue: 'CAP 2', title: '消逝的风景', titleEn: 'Hidden Whisper', director: 'Vivian Chang' },
+            { date: '2025-12-06', time: '15:00', venue: 'CAP 2', title: '青少年哪吒', titleEn: 'Les Rebelles du dieu néon', director: '蔡明亮' },
+            { date: '2025-12-06', time: '17:00', venue: 'CAP 2', title: '消逝的风景', titleEn: 'Hidden Whisper', director: 'Vivian Chang' },
+            { date: '2025-12-06', time: '17:30', venue: 'CAP 2', title: '少年吔，安啦！', titleEn: 'Dust of Angels', director: '颜正国' },
+            { date: '2025-12-06', time: '20:00', venue: 'CAP 2', title: '青少年哪吒', titleEn: 'Les Rebelles du dieu néon', director: '蔡明亮' },
+            { date: '2025-12-07', time: '14:30', venue: 'CAP 2', title: '少年吔，安啦！', titleEn: 'Dust of Angels', director: '颜正国' },
+            { date: '2025-12-09', time: '15:00', venue: 'CAP 2', title: '饮食男女', titleEn: 'Salé, sucré', director: '李安' },
+            { date: '2025-12-10', time: '15:00', venue: 'CAP 2', title: '儿子的大玩偶', titleEn: "L'Homme-sandwich", director: '集体创作' },
+            { date: '2025-12-10', time: '20:30', venue: 'CAP 2', title: '饮食男女', titleEn: 'Salé, sucré', director: '李安' },
+            { date: '2025-12-11', time: '18:00', venue: 'CAP 1', title: '儿子的大玩偶', titleEn: "L'Homme-sandwich", director: '集体创作' },
+            { date: '2025-12-11', time: '20:30', venue: 'CAP 1', title: '喜宴', titleEn: 'The Wedding Banquet', director: '李安' },
+            { date: '2025-12-12', time: '15:00', venue: 'CAP 2', title: '喜宴', titleEn: 'The Wedding Banquet', director: '李安' },
+            { date: '2025-12-13', time: '15:00', venue: 'CAP 2', title: '超级大国民', titleEn: 'Super Citizen Ko', director: '万仁' },
+            { date: '2025-12-13', time: '20:30', venue: 'CAP 2', title: '超级大国民', titleEn: 'Super Citizen Ko', director: '万仁' },
+            { date: '2025-12-14', time: '18:30', venue: 'CAP 1', title: '千禧曼波', titleEn: 'Millennium Mambo', director: '侯孝贤' },
+            { date: '2025-12-16', time: '18:45', venue: 'CAP 1', title: '风柜来的人', titleEn: 'The Boys from Fengkuei', director: '侯孝贤' },
+            { date: '2025-12-17', time: '20:45', venue: 'CAP 1', title: '风柜来的人', titleEn: 'The Boys from Fengkuei', director: '侯孝贤' },
+            { date: '2025-12-18', time: '15:00', venue: 'CAP 2', title: '小毕的故事', titleEn: 'Out of the Blue', director: '陈坤厚' },
+            { date: '2025-12-19', time: '15:00', venue: 'CAP 2', title: '光阴的故事', titleEn: 'In Our Time', director: '集体创作' },
+            { date: '2025-12-19', time: '18:00', venue: 'CAP 1', title: '小毕的故事', titleEn: 'Out of the Blue', director: '陈坤厚' },
+            { date: '2025-12-19', time: '18:00', venue: 'CAP 2', title: '麻将', titleEn: 'Mahjong', director: '杨德昌' },
+            { date: '2025-12-19', time: '19:00', venue: 'CAP 1', title: '洞', titleEn: 'The Hole', director: '蔡明亮' },
+            { date: '2025-12-20', time: '15:00', venue: 'CAP 1', title: '光阴的故事', titleEn: 'In Our Time', director: '集体创作' },
+            { date: '2025-12-20', time: '17:15', venue: 'CAP 2', title: '麻将', titleEn: 'Mahjong', director: '杨德昌' },
+            { date: '2025-12-20', time: '20:00', venue: 'CAP 2', title: '洞', titleEn: 'The Hole', director: '蔡明亮' },
+            { date: '2025-12-21', time: '17:15', venue: 'CAP 2', title: '魔法阿妈', titleEn: 'Grandma and Her Ghosts', director: '王小棣' },
+            { date: '2025-12-25', time: '18:00', venue: 'CAP 2', title: '少女小渔', titleEn: 'Siao Yu', director: '张艾嘉' },
+            { date: '2025-12-26', time: '14:30', venue: 'CAP 2', title: '少女小渔', titleEn: 'Siao Yu', director: '张艾嘉' },
+            { date: '2025-12-26', time: '20:00', venue: 'CAP 2', title: '洞', titleEn: 'The Hole', director: '蔡明亮' },
+            { date: '2025-12-27', time: '16:30', venue: 'CAP 1', title: '蓝色大门', titleEn: 'Blue Gate Crossing', director: '易智言' },
+            { date: '2025-12-27', time: '20:30', venue: 'CAP 1', title: '千禧曼波', titleEn: 'Millennium Mambo', director: '侯孝贤' },
+            { date: '2025-12-28', time: '20:30', venue: 'CAP 2', title: '蓝色大门', titleEn: 'Blue Gate Crossing', director: '易智言' },
+            { date: '2025-12-31', time: '15:00', venue: 'CAP 2', title: '魔法阿妈', titleEn: 'Grandma and Her Ghosts', director: '王小棣' },
+            { date: '2025-12-31', time: '16:00', venue: 'CAP 1', title: '饮食男女', titleEn: 'Salé, sucré', director: '李安' }
+        ];
+
+        let selectedScreenings = new Set();
+        let currentFilters = { director: 'all', venue: 'all' };
+
+        function initializeApp() {
+            loadSavedSelections();
+            populateDirectorFilter();
+            renderCalendar();
+            updateStats();
+        }
+
+        function loadSavedSelections() {
+            const saved = localStorage.getItem('selectedScreenings');
+            if (saved) {
+                selectedScreenings = new Set(JSON.parse(saved));
+            }
+        }
+
+        function saveSelections() {
+            localStorage.setItem('selectedScreenings', JSON.stringify([...selectedScreenings]));
+        }
+
+        function populateDirectorFilter() {
+            const directors = [...new Set(screeningsData.map(s => s.director))].sort();
+            const select = document.getElementById('directorFilter');
+            directors.forEach(director => {
+                const option = document.createElement('option');
+                option.value = director;
+                option.textContent = director;
+                select.appendChild(option);
+            });
+        }
+
+        function renderCalendar() {
+            const calendar = document.getElementById('calendar');
+            const filteredData = filterScreenings();
+            
+            if (filteredData.length === 0) {
+                calendar.innerHTML = `
+                    <div class="empty-state">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <h3>没有找到符合条件的放映</h3>
+                        <p>请尝试调整筛选条件</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const groupedByMonth = groupByMonth(filteredData);
+            calendar.innerHTML = '';
+
+            Object.keys(groupedByMonth).sort().forEach(monthKey => {
+                const monthSection = document.createElement('div');
+                monthSection.className = 'month-section';
+                
+                const monthHeader = document.createElement('div');
+                monthHeader.className = 'month-header';
+                monthHeader.textContent = formatMonthHeader(monthKey);
+                monthSection.appendChild(monthHeader);
+
+                const daysInMonth = groupByDay(groupedByMonth[monthKey]);
+                const weekGrid = createWeekGrid(daysInMonth, monthKey);
+                monthSection.appendChild(weekGrid);
+
+                calendar.appendChild(monthSection);
+            });
+        }
+
+        function filterScreenings() {
+            return screeningsData.filter(screening => {
+                const directorMatch = currentFilters.director === 'all' || screening.director === currentFilters.director;
+                const venueMatch = currentFilters.venue === 'all' || screening.venue === currentFilters.venue;
+                return directorMatch && venueMatch;
+            });
+        }
+
+        function groupByMonth(data) {
+            return data.reduce((acc, screening) => {
+                const monthKey = screening.date.substring(0, 7);
+                if (!acc[monthKey]) acc[monthKey] = [];
+                acc[monthKey].push(screening);
+                return acc;
+            }, {});
+        }
+
+        function groupByDay(screenings) {
+            return screenings.reduce((acc, screening) => {
+                if (!acc[screening.date]) acc[screening.date] = [];
+                acc[screening.date].push(screening);
+                return acc;
+            }, {});
+        }
+
+        function formatMonthHeader(monthKey) {
+            const [year, month] = monthKey.split('-');
+            const monthNames = ['', '一月', '二月', '三月', '四月', '五月', '六月', 
+                              '七月', '八月', '九月', '十月', '十一月', '十二月'];
+            return `${year}年 ${monthNames[parseInt(month)]}`;
+        }
+
+        function createWeekGrid(daysInMonth, monthKey) {
+            const grid = document.createElement('div');
+            grid.className = 'week-grid';
+
+            const dayHeaders = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+            dayHeaders.forEach(day => {
+                const header = document.createElement('div');
+                header.className = 'day-header';
+                header.textContent = day;
+                grid.appendChild(header);
+            });
+
+            const [year, month] = monthKey.split('-').map(Number);
+            const firstDay = new Date(year, month - 1, 1);
+            const lastDay = new Date(year, month, 0);
+            
+            let dayOfWeek = firstDay.getDay();
+            dayOfWeek = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+
+            for (let i = 0; i < dayOfWeek; i++) {
+                const emptyCell = document.createElement('div');
+                emptyCell.className = 'day-cell empty';
+                grid.appendChild(emptyCell);
+            }
+
+            for (let day = 1; day <= lastDay.getDate(); day++) {
+                const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayCell = createDayCell(day, daysInMonth[dateStr] || []);
+                grid.appendChild(dayCell);
+            }
+
+            return grid;
+        }
+
+        function createDayCell(day, screenings) {
+            const cell = document.createElement('div');
+            cell.className = 'day-cell';
+
+            const dayNumber = document.createElement('div');
+            dayNumber.className = 'day-number';
+            dayNumber.textContent = day;
+            cell.appendChild(dayNumber);
+
+            screenings.forEach(screening => {
+                const screeningDiv = createScreeningElement(screening);
+                cell.appendChild(screeningDiv);
+            });
+
+            return cell;
+        }
+
+        function createScreeningElement(screening) {
+            const screeningId = `${screening.date}-${screening.time}-${screening.venue}`;
+            const div = document.createElement('div');
+            div.className = 'screening';
+            if (screening.special) div.classList.add('special');
+            if (selectedScreenings.has(screeningId)) div.classList.add('going');
+
+            div.innerHTML = `
+                <div class="screening-time">${screening.time}</div>
+                <div class="screening-title">${screening.title}</div>
+                <div class="screening-director">${screening.director}</div>
+                <div class="screening-venue">${screening.venue}</div>
+                ${screening.special ? `<div class="special-badge">特别活动</div>` : ''}
+            `;
+
+            div.onclick = () => toggleScreening(screeningId, div);
+            div.title = `${screening.title}\n${screening.titleEn}\n导演: ${screening.director}\n${screening.time} @ ${screening.venue}${screening.specialNote ? '\n' + screening.specialNote : ''}`;
+
+            return div;
+        }
+
+        function toggleScreening(screeningId, element) {
+            if (selectedScreenings.has(screeningId)) {
+                selectedScreenings.delete(screeningId);
+                element.classList.remove('going');
+            } else {
+                selectedScreenings.add(screeningId);
+                element.classList.add('going');
+            }
+            saveSelections();
+            updateStats();
+        }
+
+        function updateStats() {
+            document.getElementById('totalScreenings').textContent = screeningsData.length;
+            document.getElementById('goingCount').textContent = selectedScreenings.size;
+            document.getElementById('specialCount').textContent = screeningsData.filter(s => s.special).length;
+        }
+
+        function clearAllSelections() {
+            if (confirm('确定要清除所有已选择的放映吗？')) {
+                selectedScreenings.clear();
+                saveSelections();
+                renderCalendar();
+                updateStats();
+            }
+        }
+
+        function exportToCalendar() {
+            if (selectedScreenings.size === 0) {
+                alert('您还没有选择任何放映！请先点击想要观看的场次。');
+                return;
+            }
+
+            const selected = screeningsData.filter(s => 
+                selectedScreenings.has(`${s.date}-${s.time}-${s.venue}`)
+            );
+
+            let icsContent = 'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Taiwan New Wave Cinema Planner//EN\n';
+            
+            selected.forEach(screening => {
+                const dateTime = `${screening.date.replace(/-/g, '')}T${screening.time.replace(':', '')}00`;
+                icsContent += 'BEGIN:VEVENT\n';
+                icsContent += `UID:${screening.date}-${screening.time}-${screening.venue}@cinema\n`;
+                icsContent += `DTSTAMP:${dateTime}\n`;
+                icsContent += `DTSTART:${dateTime}\n`;
+                icsContent += `SUMMARY:${screening.title} (${screening.titleEn})\n`;
+                icsContent += `DESCRIPTION:导演: ${screening.director}\\n影厅: ${screening.venue}${screening.specialNote ? '\\n' + screening.specialNote : ''}\n`;
+                icsContent += `LOCATION:Cinémathèque suisse, ${screening.venue}, Lausanne\n`;
+                icsContent += 'END:VEVENT\n';
+            });
+            
+            icsContent += 'END:VCALENDAR';
+
+            const blob = new Blob([icsContent], { type: 'text/calendar' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'taiwan-cinema-schedule.ics';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            alert(`已导出 ${selectedScreenings.size} 个场次到日历文件！\n请在您的日历应用中打开下载的文件。`);
+        }
+
+        document.getElementById('directorFilter').addEventListener('change', (e) => {
+            currentFilters.director = e.target.value;
+            renderCalendar();
+        });
+
+        document.getElementById('venueFilter').addEventListener('change', (e) => {
+            currentFilters.venue = e.target.value;
+            renderCalendar();
+        });
+
+        initializeApp();
+    </script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="{{ site.isolang }}" itemscope itemtype="http://schema.org/WebPage">
+{% include head.html %}
+<body>
+  <div class="site" id="top">
+
+    <!-- ─────────── Sidebar ─────────── -->
+    <aside class="sidebar">
+      <div class="intro__meta">
+        <!-- <span class="cap">Personal page</span> -->
+        <!-- <span class="cap">EPFL · MMXXVI</span> -->
+      </div>
+
+      <div class="intro__profile">
+        <div class="intro__photo">
+          <img src="{{ '/assets/images/me_o.jpg' | prepend: site.baseurl }}" alt="Zhuoqian Yang">
+        </div>
+        <!-- <div> -->
+          <!-- <span class="cap cap--ink">PhD Candidate at EPFL</span> -->
+          <!-- <div class="intro__location">Lausanne, CH</div> -->
+        <!-- </div> -->
+      </div>
+
+      <h1 class="intro__name">Zhuoqian<br><em>Zack</em><br>Yang</h1>
+      <!-- <div class="intro__nick">also known as <b>Zack</b></div> -->
+
+      <p class="intro__bio">
+        PhD candidate at EPFL, supervised by
+        <a href="https://people.epfl.ch/mathieu.salzmann">Dr.&nbsp;Mathieu Salzmann</a>
+        and
+        <a href="https://people.epfl.ch/sabine.susstrunk">Prof.&nbsp;Sabine Süsstrunk</a>.
+        Research in AI, representation learning, ML theory, and applications in vision, graphics and audio.
+      </p>
+
+      <div class="intro__group">
+        <span class="cap">Previously</span>
+        <ul class="intro__exp">
+          <li>
+            <div class="intro__exp-years">2021 — 2023</div>
+            <div class="intro__exp-text">Research Engineer at Shanghai AI Lab, with Dr. Bo Dai and Dr. Wayne Wu.</div>
+          </li>
+          <li>
+            <div class="intro__exp-years">2019 — 2020</div>
+            <div class="intro__exp-text">M.S. in Computer Vision, Robotics Institute, Carnegie Mellon University, with Prof. Laszlo Jeni.</div>
+          </li>
+          <li>
+            <div class="intro__exp-years">2015 — 2019</div>
+            <div class="intro__exp-text">B.S. in Software Engineering, Beihang University, with Prof. Zengchang Qin and Prof. Yang Yang.</div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="intro__group">
+        <span class="cap">Reach</span>
+        <div class="intro__email">yzhq97 <span>[at]</span> gmail.com</div>
+        <div class="intro__tiles">
+          <a class="intro__tile" href="{{ '/assets/files/CV - Zhuoqian Yang.pdf' | prepend: site.baseurl }}"><span>CV</span><span>pdf</span></a>
+          <a class="intro__tile" href="https://github.com/{{ site.github_username }}"><span>GitHub</span><span>↗</span></a>
+          <a class="intro__tile" href="{{ site.google_scholar }}"><span>Scholar</span><span>↗</span></a>
+          <a class="intro__tile" href="{{ site.linkedin }}"><span>LinkedIn</span><span>↗</span></a>
+        </div>
+      </div>
+
+      <p class="intro__quote">Currently thinking about the geometry of weight space.</p>
+    </aside>
+
+    <!-- ─────────── Main ─────────── -->
+    <main class="main">
+      {{ content }}
+    </main>
+
+  </div>
+
+  {% if site.g_analytics %}
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', '{{ site.g_analytics }}', 'auto');
+    ga('send', 'pageview');
+  </script>
+  {% endif %}
+</body>
+</html>

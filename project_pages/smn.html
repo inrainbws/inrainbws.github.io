@@ -1,0 +1,648 @@
+---
+permalink: /smn/
+redirect_from:
+  - /smn
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subtractive Modulative Network with Learnable Periodic Activations</title>
+    <style>
+        @font-face {
+            font-family: 'Iwona';
+            font-style: normal;
+            font-weight: 400;
+            src: url(../assets/fonts/iwona.ttf) format('truetype');
+        }
+        @font-face {
+            font-family: 'Rockwell';
+            font-style: normal;
+            font-weight: 400;
+            src: url(../assets/fonts/rockwell.ttf) format('truetype');
+        }
+
+        body {
+            font-family: 'Iwona', serif;
+            line-height: 1.6;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            background: #f5f7fa;
+            color: #333333;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-family: 'Iwona', serif;
+            font-size: 1.8em;
+            font-weight: 500;
+            color: #333333;
+            text-align: center;
+            line-height: 1.4;
+            border-radius: 20px;
+            margin-bottom: 12px;
+        }
+
+        .venue-badge {
+            display: block;
+            text-align: center;
+            margin: 0 auto 15px;
+        }
+
+        .venue-badge img {
+            height: 64px;
+            width: auto;
+        }
+
+        .authors {
+            text-align: center;
+            font-size: 1.1em;
+            color: #ff5733;
+            font-weight: 500;
+            padding: 0;
+            border-radius: 15px;
+        }
+
+        .authors a {
+            color: #ff5733;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            text-decoration-thickness: 1.5px;
+            transition: color 0.2s ease;
+        }
+
+        .affiliations {
+            font-family: 'Rockwell', monospace;
+            text-align: center;
+            font-size: 0.88em;
+            color: #555555;
+            font-style: italic;
+            padding: 12px 25px;
+            border-radius: 12px;
+        }
+
+        .links {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin: 10px 0 30px;
+            flex-wrap: wrap;
+        }
+
+        .link-button {
+            font-family: 'Rockwell', monospace;
+            display: inline-block;
+            padding: 13px 26px;
+            background: #ffffff;
+            color: #ff5733;
+            text-decoration: none;
+            border-radius: 15px;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .link-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            color: #e64a19;
+        }
+
+        .link-button:active {
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+            transform: translateY(0);
+            color: #bf360c;
+        }
+
+        /* Sections */
+        .section {
+            margin-top: 45px;
+        }
+
+        .section-title {
+            font-family: 'Iwona', serif;
+            color: #333333;
+            font-size: 1.5em;
+            font-weight: 400;
+            text-align: center;
+            position: relative;
+            padding-bottom: 12px;
+            margin-bottom: 25px;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 2px;
+            background: #ff5733;
+            border-radius: 2px;
+        }
+
+        /* Abstract */
+        .abstract-content {
+            text-align: justify;
+            line-height: 1.9;
+            color: #333333;
+            font-size: 1.02em;
+            padding: 5px;
+        }
+
+        /* Highlights */
+        .highlights-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .highlight-card {
+            background: #fafafa;
+            border-radius: 12px;
+            padding: 28px 18px;
+            text-align: center;
+            border: 1px solid #f0f0f0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .highlight-number {
+            font-family: 'Rockwell', monospace;
+            font-size: 2.1em;
+            font-weight: 700;
+            color: #ff5733;
+            display: block;
+            line-height: 1.2;
+        }
+
+        .highlight-label {
+            font-size: 0.88em;
+            color: #666;
+            margin-top: 10px;
+            display: block;
+            line-height: 1.5;
+        }
+
+        /* Method pipeline */
+        .pipeline {
+            display: flex;
+            align-items: stretch;
+            gap: 10px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .pipeline-stage {
+            background: #fafafa;
+            border: 1.5px solid #ff5733;
+            border-radius: 10px;
+            padding: 18px 18px;
+            text-align: center;
+            flex: 1;
+            min-width: 160px;
+        }
+
+        .pipeline-stage-name {
+            font-family: 'Rockwell', monospace;
+            color: #ff5733;
+            font-size: 1.0em;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .pipeline-stage-desc {
+            font-size: 0.86em;
+            color: #555;
+            line-height: 1.55;
+        }
+
+        .pipeline-arrow {
+            font-size: 1.4em;
+            color: #ccc;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Figure */
+        .figure-container {
+            text-align: center;
+            margin: 30px 0 5px;
+        }
+
+        .figure-container img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+
+        .figure-caption {
+            font-size: 0.88em;
+            color: #777;
+            margin-top: 10px;
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        /* Results tables */
+        .table-label {
+            font-family: 'Rockwell', monospace;
+            color: #555;
+            font-size: 0.98em;
+            font-weight: 400;
+            margin: 30px 0 10px;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.93em;
+        }
+
+        .results-table th {
+            font-family: 'Rockwell', monospace;
+            background: #ff5733;
+            color: white;
+            padding: 10px 14px;
+            text-align: center;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        .results-table th:first-child {
+            text-align: left;
+            border-radius: 6px 0 0 0;
+        }
+
+        .results-table th:last-child {
+            border-radius: 0 6px 0 0;
+        }
+
+        .results-table td {
+            padding: 9px 14px;
+            border-bottom: 1px solid #f0f0f0;
+            text-align: center;
+        }
+
+        .results-table td:first-child {
+            text-align: left;
+        }
+
+        .results-table tr:nth-child(even) td {
+            background: #fafafa;
+        }
+
+        .results-table tr.best td {
+            font-family: 'Rockwell', monospace;
+            color: #ff5733;
+            font-weight: 700;
+            background: #fff5f3;
+        }
+
+        .table-note {
+            font-size: 0.84em;
+            color: #888;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        /* Visual comparison */
+        .comparison-grid {
+            display: grid;
+            gap: 8px;
+            margin-top: 18px;
+        }
+
+        .comparison-item {
+            text-align: center;
+        }
+
+        .comparison-item img {
+            width: 100%;
+            border-radius: 5px;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.12);
+            display: block;
+        }
+
+        .comparison-item-label {
+            font-family: 'Rockwell', monospace;
+            font-size: 0.8em;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        .comparison-item-label.ours {
+            color: #ff5733;
+            font-weight: 700;
+        }
+
+        /* Ablation */
+        .ablation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+        }
+
+        .ablation-card {
+            background: #fafafa;
+            border-radius: 10px;
+            padding: 20px 22px;
+            border: 1px solid #f0f0f0;
+        }
+
+        .ablation-card h4 {
+            font-family: 'Rockwell', monospace;
+            color: #ff5733;
+            margin: 0 0 14px;
+            font-size: 0.93em;
+            font-weight: 600;
+        }
+
+        .ablation-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 7px 0;
+            border-bottom: 1px solid #ececec;
+            font-size: 0.88em;
+            gap: 10px;
+        }
+
+        .ablation-row:last-child {
+            border-bottom: none;
+        }
+
+        .ablation-row.best-row .ablation-val {
+            color: #ff5733;
+            font-weight: 700;
+        }
+
+        .ablation-val {
+            font-family: 'Rockwell', monospace;
+            font-weight: 600;
+            color: #555;
+            white-space: nowrap;
+        }
+
+        .ablation-note {
+            font-size: 0.8em;
+            color: #999;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        /* BibTeX */
+        .bibtex {
+            background: #fafafa;
+            border-radius: 10px;
+            padding: 22px 26px;
+            font-family: 'Rockwell', monospace;
+            font-size: 0.86em;
+            line-height: 1.8;
+            color: #444;
+            overflow-x: auto;
+            white-space: pre;
+            border: 1px solid #f0f0f0;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 680px) {
+            .container { padding: 28px 18px; }
+            h1 { font-size: 1.5em; }
+            .highlights-grid { grid-template-columns: 1fr; }
+            .ablation-grid { grid-template-columns: 1fr; }
+            .pipeline { flex-direction: column; }
+            .pipeline-arrow { transform: rotate(90deg); align-self: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <div class="venue-badge">
+            <img src="https://2026.ieeeicassp.org/wp-content/uploads/sites/4/2019/08/logo_ICASSP.png" alt="ICASSP 2026">
+        </div>
+
+        <h1>Subtractive Modulative Network with Learnable Periodic Activations</h1>
+
+        <div class="authors">
+            <a href="https://www.linkedin.com/in/tiou-wang-67223b2a3/">Tiou Wang</a><sup>*</sup>, <a href="https://inrainbws.github.io/">Zhuoqian Yang</a><sup>†</sup>, Markus Flierl<sup>*</sup>,
+            Mathieu Salzmann<sup>†</sup>, Sabine Süsstrunk<sup>†</sup>
+        </div>
+
+        <div class="affiliations">
+            <sup>*</sup>School of Electrical Engineering and Computer Science, KTH Royal Institute of Technology, Sweden<br>
+            <sup>†</sup>School of Computer and Communication Sciences, EPFL, Switzerland
+        </div>
+
+        <div class="links">
+            <a href="https://arxiv.org/abs/2602.16337" class="link-button">📄 Paper (arXiv)</a>
+            <a href="/assets/smn/supp.pdf" class="link-button">📄 Supplementary</a>
+            <a href="https://github.com/hwtomy/SMN" class="link-button">💾 Code</a>
+            <a href="/assets/smn/SMN-ICASSP2026.pdf" class="link-button">🎤 Slides</a>
+            <a href="/subtractive-synthesis" class="link-button">🎛️ Synth Demo</a>
+        </div>
+
+        <!-- Abstract -->
+        <div class="section">
+            <h2 class="section-title">Abstract</h2>
+            <div class="abstract-content">
+                We propose the Subtractive Modulative Network (SMN), a novel, parameter-efficient Implicit Neural Representation (INR) architecture inspired by classical subtractive synthesis. The SMN is designed as a principled signal processing pipeline, featuring a learnable periodic activation layer (Oscillator) that generates a multi-frequency basis, and a series of modulative mask modules (Filters) that actively generate high-order harmonics. We provide both theoretical analysis and empirical validation for our design. Our SMN achieves a PSNR of 40+ dB on two image datasets, comparing favorably against state-of-the-art methods in terms of both reconstruction accuracy and parameter efficiency. Furthermore, consistent advantage is observed on the challenging 3D NeRF novel view synthesis task.
+            </div>
+        </div>
+
+        <!-- Highlights -->
+        <div class="section">
+            <h2 class="section-title">Highlights</h2>
+            <div class="highlights-grid">
+                <div class="highlight-card">
+                    <span class="highlight-number">41.40 / 42.53 dB</span>
+                    <span class="highlight-label">PSNR on Kodak / DIV2K — state-of-the-art 2D image representation</span>
+                </div>
+                <div class="highlight-card">
+                    <span class="highlight-number">264K params</span>
+                    <span class="highlight-label">Most compact model among top performers; 4× fewer FLOPs than WIRE</span>
+                </div>
+                <div class="highlight-card">
+                    <span class="highlight-number">+0.98 dB</span>
+                    <span class="highlight-label">Margin over next-best on 3D NeRF novel view synthesis (avg. 8 scenes)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Method -->
+        <div class="section">
+            <h2 class="section-title">Method</h2>
+            <p style="text-align: justify; line-height: 1.9; color: #444; margin-bottom: 0;">
+                SMN is inspired by <strong>classical subtractive synthesis</strong> from audio signal processing: a spectrally rich signal is generated first, then progressively shaped. Given a coordinate input, the network processes it through three interpretable stages:
+            </p>
+
+            <div class="pipeline">
+                <div class="pipeline-stage">
+                    <span class="pipeline-stage-name">Oscillator</span>
+                    <span class="pipeline-stage-desc">Learnable periodic activation layer. Generates a multi-frequency basis by adaptively weighting sinusoidal components across multiple learned frequencies.</span>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-stage">
+                    <span class="pipeline-stage-name">Filter (×2)</span>
+                    <span class="pipeline-stage-desc">Modulative mask modules with dual pathways: additive modulation combines features, while multiplicative masking sculpts the spectrum and generates high-order harmonics.</span>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-stage">
+                    <span class="pipeline-stage-name">Amplifier</span>
+                    <span class="pipeline-stage-desc">Self-mask stage using a squaring operation for non-linear amplification, enabling fine detail recovery without additional parameters.</span>
+                </div>
+            </div>
+
+            <div class="figure-container">
+                <img src="https://arxiv.org/html/2602.16337v1/figures/model_stru.png"
+                     alt="SMN end-to-end architecture diagram">
+                <p class="figure-caption">End-to-end architecture of the Subtractive Modulative Network, illustrating the Oscillator, multi-stage Filter (main and masking pathways), and the Amplifier (Self-Mask) stage.</p>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div class="section">
+            <h2 class="section-title">Results</h2>
+
+            <p class="table-label">2D Image Representation</p>
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Kodak PSNR</th>
+                        <th>DIV2K PSNR</th>
+                        <th>Parameters</th>
+                        <th>GFLOPs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>MLP</td><td>28.63 dB</td><td>30.21 dB</td><td>272,415</td><td>—</td></tr>
+                    <tr><td>RINR</td><td>32.96 dB</td><td>34.03 dB</td><td>289,716</td><td>—</td></tr>
+                    <tr><td>SIREN</td><td>33.65 dB</td><td>33.73 dB</td><td>272,703</td><td>214</td></tr>
+                    <tr><td>Gauss</td><td>37.90 dB</td><td>38.34 dB</td><td>272,703</td><td>—</td></tr>
+                    <tr><td>WIRE</td><td>40.24 dB</td><td>38.90 dB</td><td>265,523</td><td>835</td></tr>
+                    <tr class="best"><td>SMN (Ours)</td><td>41.40 dB</td><td>42.53 dB</td><td>264,216</td><td>208</td></tr>
+                </tbody>
+            </table>
+            <p class="table-note">SMN achieves the highest PSNR on both datasets with fewer parameters than all baselines and 4× lower GFLOPs than WIRE.</p>
+
+            <p class="table-label">3D NeRF Novel View Synthesis (avg. over 8 scenes, 400×400)</p>
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Average PSNR</th>
+                        <th>Parameters</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>PE + WIRE</td><td>25.14 dB</td><td>283,479</td></tr>
+                    <tr><td>PE + MLP</td><td>26.66 dB</td><td>290,370</td></tr>
+                    <tr><td>PE + RINR</td><td>26.84 dB</td><td>314,703</td></tr>
+                    <tr><td>PE + SIREN</td><td>29.06 dB</td><td>287,749</td></tr>
+                    <tr><td>PE + Gauss</td><td>32.00 dB</td><td>287,749</td></tr>
+                    <tr class="best"><td>PE + SMN (Ours)</td><td>32.98 dB</td><td>287,749</td></tr>
+                </tbody>
+            </table>
+            <p class="table-note">PE = Positional Encoding. SMN outperforms the next-best method (PE + Gauss) by +0.98 dB on average across all 8 NeRF scenes.</p>
+
+            <p class="table-label" style="margin-top: 30px;">Visual Comparison — 2D Image Reconstruction</p>
+            <div class="comparison-grid" style="grid-template-columns: repeat(6, 1fr);">
+                <div class="comparison-item">
+                    <img src="https://arxiv.org/html/2602.16337v1/figures/GT1_magnified.jpeg" alt="Ground Truth">
+                    <div class="comparison-item-label">GT</div>
+                </div>
+                <div class="comparison-item">
+                    <img src="https://arxiv.org/html/2602.16337v1/figures/SI1_magnified.jpeg" alt="SIREN">
+                    <div class="comparison-item-label">SIREN</div>
+                </div>
+                <div class="comparison-item">
+                    <img src="https://arxiv.org/html/2602.16337v1/figures/RN1_magnified.jpeg" alt="RINR">
+                    <div class="comparison-item-label">RINR</div>
+                </div>
+                <div class="comparison-item">
+                    <img src="https://arxiv.org/html/2602.16337v1/figures/Ga1_magnified.jpeg" alt="Gauss">
+                    <div class="comparison-item-label">Gauss</div>
+                </div>
+                <div class="comparison-item">
+                    <img src="https://arxiv.org/html/2602.16337v1/figures/WI1_magnified.jpeg" alt="WIRE">
+                    <div class="comparison-item-label">WIRE</div>
+                </div>
+                <div class="comparison-item">
+                    <img src="https://arxiv.org/html/2602.16337v1/figures/SMN11_magnified.jpeg" alt="SMN (Ours)">
+                    <div class="comparison-item-label ours">SMN (Ours)</div>
+                </div>
+            </div>
+            <p class="figure-caption" style="margin-top: 10px;">Magnified crops from Kodak. SMN preserves fine textures and edge details most faithfully among all methods.</p>
+
+        </div>
+
+        <!-- Ablation -->
+        <div class="section">
+            <h2 class="section-title">Ablation Study</h2>
+            <div class="ablation-grid">
+                <div class="ablation-card">
+                    <h4>Modulation Mechanism (Kodak)</h4>
+                    <div class="ablation-row">
+                        <span>SMN-Add (element-wise addition)</span>
+                        <span class="ablation-val">40.25 dB</span>
+                    </div>
+                    <div class="ablation-row best-row">
+                        <span>SMN (multiplicative masking)</span>
+                        <span class="ablation-val">41.40 dB</span>
+                    </div>
+                    <p class="ablation-note">Multiplicative masking yields a +1.15 dB gain — confirming the importance of spectral sculpting over simple addition.</p>
+                </div>
+                <div class="ablation-card">
+                    <h4>Learnable Sine Layer Variants (Kodak)</h4>
+                    <div class="ablation-row">
+                        <span>Variant 1 — fixed amplitudes</span>
+                        <span class="ablation-val">35.08 dB</span>
+                    </div>
+                    <div class="ablation-row">
+                        <span>Variant 2 — K=1 learnable basis</span>
+                        <span class="ablation-val">42.87 dB</span>
+                    </div>
+                    <div class="ablation-row">
+                        <span>Variant 3 — K=2 learnable bases</span>
+                        <span class="ablation-val">43.09 dB</span>
+                    </div>
+                    <div class="ablation-row best-row">
+                        <span>Final — K=3 learnable bases</span>
+                        <span class="ablation-val">43.68 dB</span>
+                    </div>
+                    <p class="ablation-note">Each additional learnable basis consistently improves performance; K=3 is selected as the final design.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Citation -->
+        <div class="section">
+            <h2 class="section-title">Citation</h2>
+<pre class="bibtex">@inproceedings{wang2026smn,
+  title     = {Subtractive Modulative Network with Learnable Periodic Activations},
+  author    = {Wang, Tiou and Yang, Zhuoqian and Flierl, Markus and
+               Salzmann, Mathieu and S{\"u}sstrunk, Sabine},
+  booktitle = {Proceedings of ICASSP},
+  year      = {2026}
+}</pre>
+        </div>
+
+    </div>
+</body>
+</html>

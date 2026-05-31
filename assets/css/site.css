@@ -1,0 +1,705 @@
+/* ============================================================
+ * site.css — Editorial Index style
+ * Single source of truth. Replaces main.css + custom.css.
+ *
+ * Tokens are in :root. Components are named with BEM-ish classes.
+ * Hover transitions are quiet; no animations.
+ * ============================================================ */
+
+
+/* ───────────── 1. Tokens ───────────── */
+
+:root {
+  /* Paper & ink */
+  --paper:    #f4f3ef;             /* page background, sits inside the page column */
+  --paper-bg: #ecebe6;             /* fixed background outside the centered page */
+  --card:     #fcfbf8;             /* sidebar + card surfaces, one notch lighter than paper */
+
+  --ink:      #161616;
+  --ink-70:   rgba(22,22,22,0.70);
+  --ink-55:   rgba(22,22,22,0.55);
+  --ink-40:   rgba(22,22,22,0.40);
+  --ink-25:   rgba(22,22,22,0.25);
+
+  --rule:     rgba(22,22,22,0.10);
+  --rule-hi:  rgba(22,22,22,0.18);
+
+  /* Accents — use sparingly */
+  --purple:       #5C2483;
+  --purple-soft:  rgba(92,36,131,0.10);
+  --chart:        #C8D300;
+  --chart-soft:   rgba(200,211,0,0.42);
+
+  /* Type families */
+  --serif:      "Newsreader", "Iowan Old Style", Georgia, serif;     /* default serif for titles */
+  --serif-cond: "Instrument Serif", "Times New Roman", serif;        /* condensed serif — ONLY for year numerals */
+  --sans:       "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:       "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+
+  /* Geometry */
+  --site-max:   1440px;
+  --sidebar-w:  400px;
+}
+
+
+/* ───────────── 2. Base ───────────── */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+html, body { margin: 0; padding: 0; }
+
+body {
+  font-family: var(--sans);
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--paper-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+
+/* Quiet scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: rgba(22,22,22,0.18); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(22,22,22,0.32); }
+::-webkit-scrollbar-track { background: transparent; }
+
+
+/* ───────────── 3. Utility primitives ───────────── */
+
+/* Caps — small uppercase mono, used as section labels, captions, metadata */
+.cap {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-55);
+  font-weight: 500;
+}
+.cap--ink    { color: var(--ink); }
+.cap--purple { color: var(--purple); }
+
+/* Serif modifiers — usually applied via component classes; available as utilities for one-offs */
+.serif       { font-family: var(--serif); font-weight: 400; }
+.serif--cond { font-family: var(--serif-cond); }
+.italic      { font-style: italic; }
+
+
+/* ───────────── 4. Page layout ───────────── */
+
+.site {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  max-width: var(--site-max);
+  min-height: 100vh;
+  margin: 0 auto;
+  background: var(--paper);
+  border-left: 1px solid var(--rule);
+  border-right: 1px solid var(--rule);
+}
+.site > * { min-width: 0; }   /* lets grid items shrink to fit */
+
+.sidebar {
+  background: var(--card);
+  border-right: 1px solid var(--rule);
+  padding: 56px 36px 56px 56px;
+  position: sticky;
+  top: 0;
+  align-self: start;
+  max-height: 100vh;
+  overflow-y: auto;
+}
+
+.main { padding: 56px 64px 64px 56px; }
+
+
+/* ───────────── 5. Sidebar bits ───────────── */
+
+.intro__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.intro__profile {
+  margin-top: 36px;
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 20px;
+  align-items: center;
+}
+
+.intro__photo {
+  width: 144px;
+  /*height: 144px;*/
+  border-radius: 50%;
+  overflow: hidden;
+  background: #e8e6df;
+}
+.intro__photo img { width: 100%; height: 100%; object-fit: cover; }
+
+.intro__location {
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ink-55);
+}
+
+.intro__name {
+  margin: 32px 0 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 48px;
+  line-height: 0.92;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+.intro__name em { font-style: italic; color: var(--ink-70); }
+
+.intro__nick {
+  margin-top: 12px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--ink-70);
+}
+.intro__nick b { color: var(--purple); font-weight: 400; }
+
+.intro__bio {
+  margin: 22px 0 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink-70);
+  text-wrap: pretty;
+}
+.intro__bio a {
+  color: var(--purple);
+  border-bottom: 1px solid rgba(92,36,131,0.25);
+  padding-bottom: 1px;
+  transition: color .15s, border-color .15s;
+}
+.intro__bio a:hover { border-bottom-color: var(--purple); }
+
+.intro__group {
+  margin-top: 32px;
+  padding-top: 22px;
+  border-top: 1px solid var(--rule);
+}
+.intro__group + .intro__group { margin-top: 26px; }
+
+.intro__exp { list-style: none; padding: 0; margin: 14px 0 0; }
+.intro__exp li { margin-bottom: 18px; }
+.intro__exp-years {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+.intro__exp-text {
+  margin-top: 4px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink-70);
+}
+
+.intro__email {
+  margin-top: 12px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--ink);
+}
+.intro__email span { color: var(--ink-25); }
+
+.intro__tiles {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.intro__tile {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  transition: background .15s, border-color .15s;
+}
+.intro__tile:hover { background: var(--card); border-color: var(--rule-hi); }
+.intro__tile span:last-child { color: var(--ink-25); }
+
+.intro__quote {
+  margin-top: 28px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink-55);
+}
+
+
+/* ───────────── 6. Section heads ───────────── */
+
+.section { margin-top: 80px; }
+.section:first-of-type { margin-top: 0; }
+
+.section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 14px;
+}
+.section-head__title {
+  margin: 6px 0 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 48px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.section-head__title em { font-style: italic; color: var(--ink-70); }
+
+.section-head__meta { text-align: right; }
+.section-head__meta-date {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink);
+  margin-top: 4px;
+}
+.section-head__meta-sub {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-55);
+  margin-top: 2px;
+}
+
+
+/* ───────────── 7. Year band ───────────── */
+
+.year-band {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 32px;
+  margin-top: 56px;
+}
+.year-band:first-of-type { margin-top: 12px; }
+
+.year-band__rail {
+  padding-top: 22px;
+  position: sticky;
+  top: 24px;
+  align-self: start;
+}
+.year-band__year {
+  font-family: var(--serif-cond);    /* NOTE: condensed face — only here */
+  font-style: italic;
+  font-weight: 400;
+  font-size: 64px;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+.year-band__count {
+  display: block;
+  margin-top: 10px;
+  color: var(--ink-40);
+}
+.year-band__rule {
+  margin-top: 14px;
+  width: 28px;
+  height: 1px;
+  background: var(--ink-25);
+}
+
+
+/* ───────────── 8. Publication row ───────────── */
+
+.pub {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 28px;
+  padding: 22px 14px 24px;
+  margin: 0 -14px;
+  border-top: 1px solid var(--rule);
+  align-items: start;
+  transition: background .25s ease;
+}
+.pub:hover { background: rgba(92,36,131,0.03); }
+
+.pub__thumb-wrap {
+  width: 220px;
+  overflow: hidden;
+}
+.pub__thumb {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  background: #e8e6df;
+  transition: transform .55s cubic-bezier(.2,.7,.3,1);
+}
+.pub:hover .pub__thumb { transform: scale(1.045); }
+
+/* Placeholder for items without an image (e.g. video-only) */
+.pub__thumb--placeholder {
+  border: 1px solid var(--rule);
+  background: repeating-linear-gradient(45deg, var(--card), var(--card) 5px, var(--paper) 5px, var(--paper) 6px);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 10px;
+  color: var(--ink-55); letter-spacing: 0.1em;
+}
+
+.pub__body { min-width: 0; }
+
+.pub__venue-row {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 8px; flex-wrap: wrap;
+}
+
+/* Chartreuse Oral / Spotlight / Best Paper badge */
+.pub__flag {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  background: var(--chart);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.pub__title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 1.18;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.pub__authors {
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-70);
+}
+/* Chartreuse highlight for "me" in author lists */
+.pub__authors-me {
+  color: var(--ink);
+  font-weight: 600;
+  background: var(--chart-soft);
+  padding: 0 3px;
+  border-radius: 1px;
+}
+
+.pub__note {
+  margin: 6px 0 0;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--ink-55);
+}
+
+.pub__links {
+  margin-top: 12px;
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+
+
+/* ───────────── 9. Chips ───────────── */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  padding: 4px 10px;
+  border: 1px solid var(--rule);
+  color: var(--ink);
+  background: var(--card);
+  white-space: nowrap;
+  transition: border-color .15s, color .15s, background .15s;
+}
+.chip:hover { border-color: var(--ink); background: #fff; }
+
+.chip--primary {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.chip--primary:hover {
+  background: var(--purple);
+  border-color: var(--purple);
+  color: var(--paper);
+}
+
+
+/* ───────────── 10. Talks ───────────── */
+
+.talk {
+  display: grid;
+  grid-template-columns: 110px 1fr 96px;
+  gap: 28px;
+  padding: 20px 0;
+  border-top: 1px solid var(--rule);
+  align-items: baseline;
+}
+.talk:first-of-type { border-top: none; }
+.talk__date {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--ink);
+}
+.talk__title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.25;
+  color: var(--ink);
+}
+.talk__venue {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--ink-70);
+}
+.talk__chip { justify-self: end; }
+
+
+/* ───────────── 11. Academic services ───────────── */
+
+.services__row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 28px;
+  padding: 20px 0;
+  border-top: 1px solid var(--rule);
+}
+.services__value {
+  font-family: var(--serif);
+  font-size: 20px;
+  line-height: 1.3;
+  color: var(--ink);
+}
+.services__value em { font-style: italic; }
+
+.services__list > div {
+  margin-bottom: 6px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--ink);
+}
+.services__list > div:last-child { margin-bottom: 0; }
+
+.services__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.services__chip {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  padding: 4px 9px;
+  border: 1px solid var(--rule);
+  background: var(--card);
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+
+/* ───────────── 12. Misc / music card ───────────── */
+
+.misc__card {
+  margin-top: 20px;
+  padding: 22px;
+  background: var(--card);
+  border: 1px solid var(--rule);
+}
+.misc__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.misc__title {
+  font-family: var(--serif);
+  font-size: 24px;
+  line-height: 1.2;
+  color: var(--ink);
+}
+.misc__title em { font-style: italic; }
+.misc__sub {
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink-55);
+  text-transform: uppercase;
+}
+
+
+/* ───────────── 13. CTA button ───────────── */
+
+.cta {
+  padding: 10px 18px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: background .2s, transform .15s;
+}
+.cta:hover { background: var(--purple); transform: translateY(-1px); }
+.cta:active { transform: translateY(0); }
+.cta__play {
+  width: 0; height: 0;
+  border-left: 7px solid var(--chart);
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+}
+
+
+/* ───────────── 14. Site footer ───────────── */
+
+.site-footer {
+  margin-top: 96px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.site-footer__top {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-70);
+  border-bottom: 1px solid var(--ink-25);
+  padding-bottom: 1px;
+  transition: color .15s, border-color .15s;
+}
+.site-footer__top:hover { color: var(--purple); border-color: var(--purple); }
+
+
+/* ───────────── 15. Print ───────────── */
+
+@media print {
+  body { background: white; }
+  .sidebar { position: static; max-height: none; overflow: visible; border-right: none; }
+  .site { border: none; }
+  .pub:hover { background: transparent; }
+  .pub:hover .pub__thumb { transform: none; }
+}
+
+
+/* ───────────── 16. Tablet — single column ───────────── */
+
+@media (max-width: 960px) {
+  .site { grid-template-columns: 1fr; border-left: none; border-right: none; }
+  .sidebar {
+    position: static; max-height: none; overflow: visible;
+    border-right: none; border-bottom: 1px solid var(--rule);
+    padding: 40px 32px 36px;
+  }
+  .main { padding: 40px 32px 48px; }
+
+  .intro__photo { width: 112px; }
+  .intro__profile { grid-template-columns: 96px 1fr; gap: 18px; }
+  .intro__name { font-size: 40px; }
+  .intro__group { margin-top: 28px; padding-top: 18px; }
+
+  .section { margin-top: 64px; }
+  .section-head__title { font-size: 38px; }
+
+  .year-band { grid-template-columns: 80px 1fr; gap: 22px; margin-top: 44px; }
+  .year-band__year { font-size: 52px; }
+
+  .pub { grid-template-columns: 160px 1fr; gap: 20px; }
+  .pub__thumb-wrap { width: 160px; }
+  .pub__title { font-size: 23px; }
+
+  .talk { grid-template-columns: 100px 1fr; gap: 22px; row-gap: 10px; }
+  .talk__title { font-size: 20px; }
+  .talk__date  { font-size: 22px; }
+  .talk__chip  { grid-column: 2; justify-self: start; }
+
+  .services__row { grid-template-columns: 96px 1fr; gap: 22px; }
+
+  .site-footer { margin-top: 72px; }
+}
+
+
+/* ───────────── 17. Phone ───────────── */
+
+@media (max-width: 560px) {
+  .sidebar { padding: 28px 20px; }
+  .main    { padding: 28px 20px 40px; }
+
+  .intro__photo { width: 88px; }
+  .intro__profile { grid-template-columns: 80px 1fr; gap: 14px; }
+  .intro__name { font-size: 34px; margin-top: 24px; }
+  .intro__bio  { font-size: 13px; }
+  .intro__tiles { gap: 6px; }
+  .intro__tile  { padding: 10px 12px; }
+
+  .section { margin-top: 48px; }
+  .section-head { flex-wrap: wrap; row-gap: 8px; padding-bottom: 12px; }
+  .section-head__title { font-size: 30px; }
+  .section-head__meta  { text-align: left; }
+
+  .year-band { grid-template-columns: 1fr; gap: 12px; margin-top: 36px; }
+  .year-band__rail {
+    position: static; padding-top: 6px;
+    display: flex; align-items: baseline; gap: 14px;
+  }
+  .year-band__year  { font-size: 40px; }
+  .year-band__count { margin-top: 0; }
+  .year-band__rule  { display: none; }
+
+  .pub {
+    grid-template-columns: 1fr; gap: 14px;
+    padding: 18px 12px 20px; margin: 0 -12px;
+  }
+  .pub__thumb-wrap { width: 100%; }
+  .pub__title   { font-size: 21px; }
+  .pub__authors { font-size: 12.5px; }
+
+  .talk { grid-template-columns: 1fr; gap: 6px; padding: 18px 0; }
+  .talk__date  { font-size: 18px; }
+  .talk__title { font-size: 19px; }
+  .talk__chip  { grid-column: 1; margin-top: 6px; }
+
+  .services__row { grid-template-columns: 1fr; gap: 8px; padding: 16px 0; }
+
+  .chip, .services__chip { padding: 8px 12px; font-size: 11.5px; }
+
+  .misc__row   { grid-template-columns: 1fr; gap: 14px; }
+  .misc__title { font-size: 20px; }
+
+  .site-footer {
+    flex-direction: column; align-items: flex-start;
+    gap: 10px; margin-top: 56px;
+  }
+}

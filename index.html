@@ -1,0 +1,134 @@
+---
+permalink: /
+layout: default
+---
+
+{% comment %}
+  Section 01 — Publications (Index of works).
+  Posts are grouped by year via `group_by_exp`. Each year becomes a `.year-band`
+  whose left rail shows the year numeral (condensed serif) and item count.
+  Each post's body MUST already render the inner publication markup —
+  see style-package/templates/example-post.md for the required pattern.
+{% endcomment %}
+<section class="section">
+  <header class="section-head">
+    <div>
+      <span class="cap">§ 01</span>
+      <h2 class="section-head__title">Projects</h2>
+    </div>
+    <div class="section-head__meta">
+      <span class="cap">Updated</span>
+      <div class="section-head__meta-date">{{ site.time | date: '%Y · %m · %d' }}</div>
+      <div class="section-head__meta-sub">{{ site.posts | size }} entries · 2019—26</div>
+    </div>
+  </header>
+
+  {% assign posts_by_year = site.posts | group_by_exp: "post", "post.date | date: '%Y'" %}
+  {% for year_group in posts_by_year %}
+    <section class="year-band">
+      <div class="year-band__rail">
+        <div class="year-band__year">{{ year_group.name }}</div>
+        {% assign n = year_group.items | size %}
+        <span class="cap year-band__count">
+          {% if n < 10 %}0{% endif %}{{ n }} {% if n == 1 %}item{% else %}items{% endif %}
+        </span>
+        <div class="year-band__rule"></div>
+      </div>
+      <div>
+        {% for post in year_group.items %}
+          <article class="pub">{{ post.content }}</article>
+        {% endfor %}
+      </div>
+    </section>
+  {% endfor %}
+</section>
+
+
+{% comment %} Section 02 — Talks {% endcomment %}
+<section class="section">
+  <header class="section-head">
+    <div>
+      <span class="cap">§ 02</span>
+      <h2 class="section-head__title">Talks</h2>
+    </div>
+    <span class="cap">1 entry</span>
+  </header>
+
+  <div class="talk">
+    <div class="talk__date">Feb 2026</div>
+    <div>
+      <h3 class="talk__title">Weight Space Representation Learning via Neural Field Adaptation</h3>
+      <div class="talk__venue">AI:ML Group Seminar, University of St. Gallen</div>
+    </div>
+    <a class="chip talk__chip" href="https://actu.epfl.ch/news/talk-by-zhuoqian-yang-at-university-of-st-gallen/">slides</a>
+  </div>
+</section>
+
+
+{% comment %} Section 03 — Academic services {% endcomment %}
+<section class="section">
+  <header class="section-head">
+    <div>
+      <span class="cap">§ 03</span>
+      <h2 class="section-head__title">Academic Services</h2>
+    </div>
+  </header>
+
+  <div class="services__row">
+    <span class="cap">Volunteer</span>
+    <div class="services__value"><em>ICCP</em> 2024, Lausanne</div>
+  </div>
+  <div class="services__row">
+    <span class="cap">Teaching</span>
+    <div class="services__list">
+      <div>CS-341 Computer Graphics, Spring 2024, EPFL</div>
+      <div>CS-233 Intro to Machine Learning, Spring 2026, EPFL</div>
+    </div>
+  </div>
+  <div class="services__row">
+    <span class="cap">Reviewer</span>
+    <div class="services__chips">
+      <span class="services__chip">CVPR</span>
+      <span class="services__chip">ECCV</span>
+      <span class="services__chip">AAAI</span>
+      <span class="services__chip">ICLR</span>
+      <span class="services__chip">ACM MM</span>
+    </div>
+  </div>
+</section>
+
+
+{% comment %} Section 04 — Misc / music {% endcomment %}
+<section class="section">
+  <header class="section-head">
+    <div>
+      <span class="cap">§ 04</span>
+      <h2 class="section-head__title">Misc.</h2>
+    </div>
+    <!-- <span class="cap">Original</span> -->
+  </header>
+
+  <div class="misc__card">
+    <div class="misc__row">
+      <div>
+        <div class="misc__title">Check out my <em>original</em> music</div>
+        <div class="misc__sub">Headphones recommended</div>
+      </div>
+      <a class="cta" href="https://open.spotify.com/track/6Xd2oVpeYPY2DuyOZeHE6j" target="_blank" rel="noreferrer">
+        <span class="cta__play"></span>
+        OPEN IN SPOTIFY ↗
+      </a>
+    </div>
+    <iframe title="Spotify"
+      src="https://open.spotify.com/embed/track/6Xd2oVpeYPY2DuyOZeHE6j?utm_source=generator&theme=0"
+      width="100%" height="80" frameborder="0"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      loading="lazy" style="border: 0; background: transparent; border-radius: 8px;"></iframe>
+  </div>
+</section>
+
+
+<footer class="site-footer">
+  <span class="cap">© {{ site.author }} · {{ site.time | date: '%Y' }}</span>
+  <a class="site-footer__top" href="#top">↑ To top</a>
+</footer>

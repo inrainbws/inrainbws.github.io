@@ -1,0 +1,476 @@
+---
+permalink: /wsr/
+redirect_from:
+  - /wsr
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weight Space Representation Learning via Neural Field Adaptation</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Instrument+Serif:ital@0;1&family=Geist:wght@300..600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+  <style>
+    /* ───────────── Tokens (mirror site.css) ───────────── */
+    :root {
+      --paper:    #f4f3ef;
+      --paper-bg: #ecebe6;
+      --card:     #fcfbf8;
+
+      --ink:      #161616;
+      --ink-70:   rgba(22,22,22,0.70);
+      --ink-55:   rgba(22,22,22,0.55);
+      --ink-40:   rgba(22,22,22,0.40);
+      --ink-25:   rgba(22,22,22,0.25);
+
+      --rule:     rgba(22,22,22,0.10);
+      --rule-hi:  rgba(22,22,22,0.18);
+
+      --purple:       #5C2483;
+      --purple-soft:  rgba(92,36,131,0.10);
+      --chart:        #C8D300;
+      --chart-soft:   rgba(200,211,0,0.42);
+
+      --serif:      "Newsreader", "Iowan Old Style", Georgia, serif;
+      --sans:       "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
+      --mono:       "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+
+      --page-max:  1040px;
+    }
+
+    /* ───────────── Base ───────────── */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: var(--sans);
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--ink);
+      background: var(--paper-bg);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    p { margin: 0 0 14px; }
+    p:last-child { margin-bottom: 0; }
+
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-thumb { background: rgba(22,22,22,0.18); border-radius: 8px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(22,22,22,0.32); }
+    ::-webkit-scrollbar-track { background: transparent; }
+
+    /* ───────────── Utility primitives ───────────── */
+    .cap {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-55);
+      font-weight: 500;
+    }
+    .cap--ink    { color: var(--ink); }
+    .cap--purple { color: var(--purple); }
+
+    /* ───────────── Page shell ───────────── */
+    .page {
+      max-width: var(--page-max);
+      margin: 0 auto;
+      background: var(--paper);
+      border-left: 1px solid var(--rule);
+      border-right: 1px solid var(--rule);
+      min-height: 100vh;
+      padding: 56px 64px 80px;
+    }
+
+    /* ───────────── Header ───────────── */
+    .hdr__cap-row {
+      display: flex;
+      gap: 18px;
+      align-items: baseline;
+      margin-bottom: 22px;
+    }
+    .hdr__title {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: 40px;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      margin: 0 0 18px;
+      color: var(--ink);
+      max-width: 900px;
+    }
+    .hdr__title em { font-style: italic; font-weight: 400; }
+    .hdr__authors {
+      font-family: var(--sans);
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--ink-70);
+      margin: 0 0 6px;
+    }
+    .hdr__authors a {
+      color: var(--ink-70);
+      border-bottom: 1px solid var(--rule);
+    }
+    .hdr__authors a:hover {
+      color: var(--purple);
+      border-bottom-color: var(--purple);
+    }
+    .hdr__authors-me {
+      color: var(--ink);
+      background: var(--chart-soft);
+      padding: 0 4px;
+    }
+    .hdr__aff {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: var(--ink-55);
+      margin: 0 0 22px;
+    }
+
+    /* Chips */
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0;
+    }
+    .chip {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.02em;
+      color: var(--ink);
+      background: var(--card);
+      border: 1px solid var(--rule);
+      padding: 7px 12px;
+      transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+    }
+    .chip:hover {
+      border-color: var(--ink);
+      background: #fff;
+    }
+    .chip--primary {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+    .chip--primary:hover {
+      background: var(--purple);
+      border-color: var(--purple);
+      color: var(--paper);
+    }
+
+    /* ───────────── Poster + Section heads ───────────── */
+    .section { margin-top: 72px; }
+
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--ink);
+      margin-bottom: 28px;
+    }
+    .section-head__num { flex: 0 0 auto; }
+    .section-head__title {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: 32px;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin: 0;
+    }
+    .section-head__title em { font-style: italic; font-weight: 400; }
+
+    /* Poster figure */
+    .poster {
+      margin: 0;
+      border: 1px solid var(--rule);
+      background: #fff;
+    }
+    .poster img { width: 100%; height: auto; display: block; }
+
+    /* Live poster session (shown only on the session date) */
+    .live-session { display: none; }
+    .live-session__card {
+      border: 1px solid var(--ink);
+      background: var(--card);
+      padding: 26px 30px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 20px 28px;
+    }
+    .live-session__pulse {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--chart);
+      box-shadow: 0 0 0 0 var(--chart-soft);
+      animation: live-pulse 1.6s ease-out infinite;
+      flex: 0 0 auto;
+    }
+    @keyframes live-pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(200,211,0,0.65); }
+      100% { box-shadow: 0 0 0 14px rgba(200,211,0,0); }
+    }
+    .live-session__text {
+      font-family: var(--serif);
+      font-size: 17px;
+      line-height: 1.45;
+      color: var(--ink);
+      flex: 1 1 260px;
+      margin: 0;
+    }
+    .live-session__text strong { font-weight: 500; }
+    .live-session__link {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      color: var(--ink-55);
+      word-break: break-all;
+      margin: 6px 0 0;
+    }
+    .live-session__link a {
+      color: var(--purple);
+      border-bottom: 1px solid var(--purple-soft);
+    }
+    .live-session__link a:hover { border-bottom-color: var(--purple); }
+
+    /* Video figure */
+    .video {
+      margin: 0;
+      border: 1px solid var(--rule);
+      background: #000;
+      position: relative;
+      aspect-ratio: 16 / 9;
+    }
+    .video iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
+    /* TL;DR take-aways */
+    .tldr {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1px solid var(--rule);
+      background: var(--card);
+    }
+    .tldr__item {
+      padding: 28px 30px;
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+    }
+    .tldr__item + .tldr__item {
+      border-left: 1px solid var(--rule);
+    }
+    .tldr__num {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 44px;
+      line-height: 0.9;
+      color: var(--purple);
+      flex: 0 0 auto;
+      letter-spacing: -0.02em;
+    }
+    .tldr__body {
+      font-family: var(--serif);
+      font-size: 17px;
+      line-height: 1.45;
+      color: var(--ink);
+      margin: 0;
+      padding-top: 4px;
+    }
+    .tldr__body em {
+      font-style: italic;
+      background: var(--chart-soft);
+      padding: 0 3px;
+    }
+    .tldr__body strong {
+      font-weight: 500;
+      color: var(--purple);
+    }
+    @media (max-width: 760px) {
+      .tldr { grid-template-columns: 1fr; }
+      .tldr__item + .tldr__item {
+        border-left: none;
+        border-top: 1px solid var(--rule);
+      }
+      .tldr__num { font-size: 36px; }
+      .tldr__body { font-size: 15px; }
+    }
+
+    /* BibTeX */
+    .bibtex {
+      background: var(--card);
+      border: 1px solid var(--rule);
+      padding: 22px 24px;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--ink-70);
+      overflow-x: auto;
+      white-space: pre;
+      margin: 0;
+    }
+
+    /* Responsive */
+    @media (max-width: 760px) {
+      .page { padding: 40px 22px 60px; }
+      .hdr__title { font-size: 30px; }
+      .section { margin-top: 56px; }
+      .section-head__title { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <article class="page">
+
+    <!-- ───────────── Header ───────────── -->
+    <header>
+      <div class="hdr__cap-row">
+        <span class="cap cap--ink">CVPR 2026</span>
+        <span class="cap">Poster</span>
+      </div>
+
+      <h1 class="hdr__title">Weight Space Representation Learning <br> <em>via</em> Neural Field Adaptation</h1>
+
+      <p class="hdr__authors">
+        <span class="hdr__authors-me">Zhuoqian Yang</span>,
+        <a href="https://people.epfl.ch/mathieu.salzmann">Mathieu Salzmann</a>,
+        <a href="https://people.epfl.ch/sabine.susstrunk">Sabine Süsstrunk</a>
+      </p>
+      <p class="hdr__aff">IVRL · EPFL</p>
+
+      <div class="chips">
+        <a class="chip chip--primary" href="https://arxiv.org/abs/2512.01759">paper</a>
+        <a class="chip" href="https://github.com/inrainbws/wsr.pytorch">code</a>
+        <a class="chip" href="https://github.com/inrainbws/peft-mlora">peft-mlora</a>
+        <a class="chip" href="https://www.youtube.com/watch?v=ppzfOqzrwvM">video</a>
+        <a class="chip" href="/assets/wsr/poster.pdf">poster (pdf)</a>
+      </div>
+    </header>
+
+    <!-- ───────────── Live Poster Session (visible only on Jun 6, 2026) ───────────── -->
+    <section class="section live-session" id="live-session">
+      <header class="section-head">
+        <span class="cap cap--ink section-head__num">Today</span>
+        <h2 class="section-head__title">Poster session <em>today</em></h2>
+      </header>
+
+      <div class="live-session__card">
+        <span class="live-session__pulse" aria-hidden="true"></span>
+        <p class="live-session__text">
+          <strong>Sat, Jun 6, 2026 · 7:45–9:45 PM CEST.</strong>
+          Join the Zoom room to chat with me during the CVPR 2026 poster session.
+        </p>
+        <a class="chip chip--primary" href="https://epfl.zoom.us/j/6336990049">open zoom</a>
+        <p class="live-session__link">
+          <a href="https://epfl.zoom.us/j/6336990049">https://epfl.zoom.us/j/6336990049</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- ───────────── TL;DR ───────────── -->
+    <section class="section">
+      <header class="section-head">
+        <span class="cap cap--ink section-head__num">§ 01</span>
+        <h2 class="section-head__title">TL;DR</h2>
+      </header>
+
+      <div class="tldr">
+        <div class="tldr__item">
+          <span class="tldr__num">1</span>
+          <p class="tldr__body">
+            Properly constrained weights exhibit <em>semantic structure</em> and serve as <em>effective data representations</em>.
+          </p>
+        </div>
+        <div class="tldr__item">
+          <span class="tldr__num">2</span>
+          <p class="tldr__body">
+            Weight-space geometry <em>correlates strongly</em> with diffusion <em>generation quality</em>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── Video ───────────── -->
+    <section class="section">
+      <header class="section-head">
+        <span class="cap cap--ink section-head__num">§ 02</span>
+        <h2 class="section-head__title">Video</h2>
+      </header>
+
+      <figure class="video">
+        <iframe
+          src="https://www.youtube.com/embed/ppzfOqzrwvM"
+          title="Weight Space Representation Learning via Neural Field Adaptation"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen></iframe>
+      </figure>
+    </section>
+
+    <!-- ───────────── Poster ───────────── -->
+    <section class="section">
+      <header class="section-head">
+        <span class="cap cap--ink section-head__num">§ 03</span>
+        <h2 class="section-head__title">Poster</h2>
+      </header>
+
+      <figure class="poster">
+        <a href="/assets/wsr/poster.pdf">
+          <img src="/assets/wsr/poster.png" alt="CVPR 2026 poster: Weight Space Representation Learning via Neural Field Adaptation">
+        </a>
+      </figure>
+    </section>
+
+    <!-- ───────────── Citation ───────────── -->
+    <section class="section">
+      <header class="section-head">
+        <span class="cap cap--ink section-head__num">§ 04</span>
+        <h2 class="section-head__title">Cite this work</h2>
+      </header>
+
+<pre class="bibtex">@inproceedings{yang2026wsr,
+  title     = {Weight Space Representation Learning via Neural Field Adaptation},
+  author    = {Yang, Zhuoqian and Salzmann, Mathieu and S{\"u}sstrunk, Sabine},
+  booktitle = {Proceedings of the IEEE/CVF Conference on
+               Computer Vision and Pattern Recognition (CVPR)},
+  year      = {2026}
+}</pre>
+    </section>
+
+  </article>
+
+  <script>
+    // Reveal the poster-session block for all of Jun 6, 2026 CEST (UTC+2),
+    // regardless of the visitor's local timezone.
+    (function () {
+      var start = Date.UTC(2026, 5, 5, 22, 0, 0); // Jun 6 00:00 CEST
+      var end   = Date.UTC(2026, 5, 6, 22, 0, 0); // Jun 7 00:00 CEST
+      var now   = Date.now();
+      if (now >= start && now < end) {
+        var el = document.getElementById('live-session');
+        if (el) el.style.display = 'block';
+      }
+    })();
+  </script>
+</body>
+</html>
