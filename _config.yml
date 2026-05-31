@@ -17,8 +17,7 @@ author: "Zhuoqian Yang"
 address: "Shanghai, CN"
 email: "yzhq97 [at] gmail.com"
 
-# google analytics tracking code, please change the value
-g_analytics: "UA-149364194-1"
+# analytics: GoatCounter (script hardcoded in _layouts/default.html)
 
 # language settings
 isolang: en
