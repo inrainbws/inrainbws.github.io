@@ -198,8 +198,22 @@ redirect_from:
     }
     .poster img { width: 100%; height: auto; display: block; }
 
-    /* Live poster session (shown only on the session date) */
+    /* Live poster session (card shown Jun 3–7; zoom link only on Jun 6) */
     .live-session { display: none; }
+    .live-session__pulse,
+    .live-session__join,
+    .live-session__link { display: none; }
+    .live-session--live .live-session__pulse { display: block; }
+    .live-session--live .live-session__join { display: inline-block; }
+    .live-session--live .live-session__link { display: block; }
+    .live-session--live .live-session__note { display: none; }
+    .live-session__note {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      color: var(--ink-55);
+      margin: 0;
+    }
     .live-session__card {
       border: 1px solid var(--ink);
       background: var(--card);
@@ -367,23 +381,24 @@ redirect_from:
       </div>
     </header>
 
-    <!-- ───────────── Live Poster Session (visible only on Jun 6, 2026) ───────────── -->
+    <!-- ───────────── Live Poster Session (card visible Jun 3–7; zoom link only on Jun 6, 2026) ───────────── -->
     <section class="section live-session" id="live-session">
       <header class="section-head">
-        <span class="cap cap--ink section-head__num">Today</span>
-        <h2 class="section-head__title">Poster session <em>today</em></h2>
+        <span class="cap cap--ink section-head__num" id="live-session-cap">Jun 6</span>
+        <h2 class="section-head__title" id="live-session-title">Poster session</h2>
       </header>
 
       <div class="live-session__card">
         <span class="live-session__pulse" aria-hidden="true"></span>
         <p class="live-session__text">
-          <strong>Sat, Jun 6, 2026 · 7:45–9:45 PM CEST.</strong>
+          <strong>Sat, Jun 6, 2026 · 11:45 AM–1:45 PM MDT (Denver).</strong>
           Join the Zoom room to chat with me during the CVPR 2026 poster session.
         </p>
-        <a class="chip chip--primary" href="https://epfl.zoom.us/j/6336990049">open zoom</a>
+        <a class="chip chip--primary live-session__join" href="https://epfl.zoom.us/j/63975566519?pwd=dfnbm7oLl7bfririjCfGEi1vqh68U3.1">open zoom</a>
         <p class="live-session__link">
-          <a href="https://epfl.zoom.us/j/6336990049">https://epfl.zoom.us/j/6336990049</a>
+          <a href="https://epfl.zoom.us/j/63975566519?pwd=dfnbm7oLl7bfririjCfGEi1vqh68U3.1">https://epfl.zoom.us/j/63975566519?pwd=dfnbm7oLl7bfririjCfGEi1vqh68U3.1</a>
         </p>
+        <p class="live-session__note">The Zoom link will appear here on the day of the session.</p>
       </div>
     </section>
 
@@ -460,15 +475,24 @@ redirect_from:
   </article>
 
   <script>
-    // Reveal the poster-session block for all of Jun 6, 2026 CEST (UTC+2),
-    // regardless of the visitor's local timezone.
+    // Show the poster-session card for the whole CVPR period (Jun 3–7, 2026,
+    // Denver / MDT, UTC-6) regardless of the visitor's local timezone.
+    // The Zoom link itself is revealed only on the session day (Jun 6).
     (function () {
-      var start = Date.UTC(2026, 5, 5, 22, 0, 0); // Jun 6 00:00 CEST
-      var end   = Date.UTC(2026, 5, 6, 22, 0, 0); // Jun 7 00:00 CEST
-      var now   = Date.now();
-      if (now >= start && now < end) {
-        var el = document.getElementById('live-session');
-        if (el) el.style.display = 'block';
+      var showStart = Date.UTC(2026, 5, 3, 6, 0, 0); // Jun 3 00:00 MDT
+      var showEnd   = Date.UTC(2026, 5, 8, 6, 0, 0); // Jun 8 00:00 MDT (end of Jun 7)
+      var liveStart = Date.UTC(2026, 5, 6, 6, 0, 0); // Jun 6 00:00 MDT
+      var liveEnd   = Date.UTC(2026, 5, 7, 6, 0, 0); // Jun 7 00:00 MDT
+      var now = Date.now();
+      var el = document.getElementById('live-session');
+      if (!el || now < showStart || now >= showEnd) return;
+      el.style.display = 'block';
+      if (now >= liveStart && now < liveEnd) {
+        el.classList.add('live-session--live');
+        var cap = document.getElementById('live-session-cap');
+        var title = document.getElementById('live-session-title');
+        if (cap) cap.textContent = 'Today';
+        if (title) title.innerHTML = 'Poster session <em>today</em>';
       }
     })();
   </script>
