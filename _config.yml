@@ -17,7 +17,8 @@ author: "Zhuoqian Yang"
 address: "Shanghai, CN"
 email: "yzhq97 [at] gmail.com"
 
-# analytics: GoatCounter (script hardcoded in _layouts/default.html)
+# analytics: GoatCounter (script hardcoded in _layouts/default.html and in each
+# project_pages/*.html; hg3d.html uses an inline ping before its external redirect)
 
 # language settings
 isolang: en
