@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "ColorHead"
+kind: project
 ---
 
 <div class="pub__thumb-wrap">
@@ -12,7 +13,7 @@ title:  "ColorHead"
   </div>
   <h3 class="pub__title">ColorHead</h3>
   <p class="pub__authors">
-    A desktop app for processing DIY scanned color negatives — accurate colors,
+    A <strong>free</strong> desktop app for processing DIY scanned color negatives — accurate colors,
     analog paper response, and darkroom-style controls.
   </p>
   <div class="pub__links">

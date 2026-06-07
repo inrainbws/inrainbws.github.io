@@ -257,7 +257,6 @@ a { color: inherit; text-decoration: none; }
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  border-bottom: 1px solid var(--ink);
   padding-bottom: 14px;
 }
 .section-head__title {
@@ -345,7 +344,7 @@ a { color: inherit; text-decoration: none; }
 .pub__thumb {
   width: 100%;
   aspect-ratio: 16/9;
-  object-fit: cover;
+  object-fit: contain;
   background: #e8e6df;
   transition: transform .55s cubic-bezier(.2,.7,.3,1);
 }
@@ -580,6 +579,158 @@ a { color: inherit; text-decoration: none; }
 }
 
 
+/* ───────────── 13b. Tabs (Research / Projects) ───────────── */
+
+/* Radio inputs drive the panels; kept in-flow but visually hidden so the
+   `:checked ~` sibling selectors below can switch tabs without JS. */
+.tabs__input {
+  position: absolute;
+  width: 1px; height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* The two tabs ARE the section title: Research / Projects are selectable
+   serif headings sitting on the section-head's ink rule. Full ink marks the
+   active choice; the inactive one dims back, inviting the switch. */
+.tabs__nav {
+  display: flex;
+  align-items: baseline;
+  gap: 28px;
+  margin: 6px 0 0;
+  font-weight: 400;   /* reset h2 default */
+}
+.tabs__tab {
+  cursor: pointer;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 48px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--ink-25);
+  transition: color .15s;
+}
+.tabs__tab:hover { color: var(--ink-55); }
+.tabs__count {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--ink-25);
+  vertical-align: super;
+  margin-left: 3px;
+}
+
+.tabs__panel { display: none; }
+
+/* Active tab + visible panel, selected via the checked radio */
+#tab-research:checked ~ .section-head .tabs__tab[for="tab-research"],
+#tab-projects:checked ~ .section-head .tabs__tab[for="tab-projects"] {
+  color: var(--ink);
+}
+#tab-research:checked ~ .section-head .tabs__tab[for="tab-research"] .tabs__count,
+#tab-projects:checked ~ .section-head .tabs__tab[for="tab-projects"] .tabs__count {
+  color: var(--ink-55);
+}
+#tab-research:checked ~ .tabs__panel--research { display: block; }
+#tab-projects:checked ~ .tabs__panel--projects { display: block; }
+
+/* Keyboard focus — underline the focused tab */
+#tab-research:focus-visible ~ .section-head .tabs__tab[for="tab-research"],
+#tab-projects:focus-visible ~ .section-head .tabs__tab[for="tab-projects"] {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  text-decoration-thickness: 1px;
+}
+
+
+/* ───────────── 13b-ii. Research pagination ───────────── */
+
+/* Page radios — hidden like the tab radios; `:checked ~` reveals one page. */
+.rpage__input {
+  position: absolute;
+  width: 1px; height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+.rpage { display: none; }
+
+/* Reveal the page whose radio is checked. Enumerated up to 6 pages (24 works);
+   extend this list if the research list ever grows past that. */
+#rp-1:checked ~ .rpage--1,
+#rp-2:checked ~ .rpage--2,
+#rp-3:checked ~ .rpage--3,
+#rp-4:checked ~ .rpage--4,
+#rp-5:checked ~ .rpage--5,
+#rp-6:checked ~ .rpage--6 { display: block; }
+
+/* No rule of its own — it sits in the gap below the section's ink rule, so the
+   only hairline below it is the first publication's own top border. */
+.rpager {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  margin-top: 16px;
+}
+.rpager__label { color: var(--ink-40); margin-left: auto; }
+.rpager__nums {
+  display: flex;
+  gap: 4px;
+}
+.rpager__num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--ink-40);
+  padding: 6px 11px;
+  border: 1px solid var(--rule);
+  background: var(--card);
+  cursor: pointer;
+  transition: color .15s, border-color .15s, background .15s;
+}
+.rpager__num:hover { color: var(--ink); border-color: var(--rule-hi); }
+
+/* Active page number */
+#rp-1:checked ~ .rpager .rpager__num[for="rp-1"],
+#rp-2:checked ~ .rpager .rpager__num[for="rp-2"],
+#rp-3:checked ~ .rpager .rpager__num[for="rp-3"],
+#rp-4:checked ~ .rpager .rpager__num[for="rp-4"],
+#rp-5:checked ~ .rpager .rpager__num[for="rp-5"],
+#rp-6:checked ~ .rpager .rpager__num[for="rp-6"] {
+  color: var(--paper);
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+
+/* ───────────── 13c. Ko-fi support block ───────────── */
+
+.kofi {
+  margin-top: 48px;
+  padding: 22px 24px;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: center;
+}
+.kofi__title {
+  font-family: var(--serif);
+  font-size: 22px;
+  line-height: 1.2;
+  color: var(--ink);
+}
+.kofi__title em { font-style: italic; color: var(--ink-70); }
+.kofi__sub {
+  margin-top: 5px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ink-55);
+}
+
+
 /* ───────────── 14. Site footer ───────────── */
 
 .site-footer {
@@ -632,6 +783,8 @@ a { color: inherit; text-decoration: none; }
 
   .section { margin-top: 64px; }
   .section-head__title { font-size: 38px; }
+  .tabs__nav { gap: 22px; }
+  .tabs__tab { font-size: 38px; }
 
   .year-band { grid-template-columns: 80px 1fr; gap: 22px; margin-top: 44px; }
   .year-band__year { font-size: 52px; }
@@ -697,6 +850,14 @@ a { color: inherit; text-decoration: none; }
 
   .misc__row   { grid-template-columns: 1fr; gap: 14px; }
   .misc__title { font-size: 20px; }
+
+  .tabs__nav { gap: 18px; }
+  .tabs__tab { font-size: 30px; }
+
+  .rpager { flex-wrap: wrap; row-gap: 12px; }
+  .rpager__label { margin-left: 0; }
+
+  .kofi { grid-template-columns: 1fr; gap: 16px; }
 
   .site-footer {
     flex-direction: column; align-items: flex-start;
