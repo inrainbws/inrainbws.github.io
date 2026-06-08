@@ -12,24 +12,30 @@ external_url: https://3dhumangan.github.io/
 <head>
 <link rel="canonical" href="{{ page.external_url }}"/>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<meta http-equiv="refresh" content="1;url={{ page.external_url }}" />
+<meta http-equiv="refresh" content="2;url={{ page.external_url }}" />
 </head>
 <body>
     <h1>Redirecting...</h1>
       <a href="{{ page.external_url }}">Click here if you are not redirected.<a>
-      <!-- GoatCounter analytics: ping before redirecting (async count.js would be
-           cancelled by the immediate navigation), then redirect within 300ms -->
-      <script>
-        (function() {
-          var done = false;
-          function go() { if (!done) { done = true; location = '{{ page.external_url }}'; } }
-          var img = new Image();
-          img.onload = img.onerror = go;
-          img.src = 'https://inrainbws.goatcounter.com/count?p=' +
-                    encodeURIComponent(location.pathname) +
-                    '&r=' + encodeURIComponent(document.referrer);
-          setTimeout(go, 300);
-        })();
-      </script>
+      <!-- MapMyVisitors analytics: an async tracker would be cancelled by the
+           immediate navigation, so load globe.js and redirect once it has loaded
+           (giving its beacon a moment to fire), with a timeout fallback. The
+           meta-refresh above is the last-resort fallback. -->
+      <div style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;" aria-hidden="true">
+        <script>
+          (function() {
+            var done = false;
+            function go() { if (!done) { done = true; location = '{{ page.external_url }}'; } }
+            var s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.id = 'mmvst_globe';
+            s.src = '//mapmyvisitors.com/globe.js?d=dixcYWfl7Uopqghf9Vrm664yENyHwZd5TKdp1-qkDHM';
+            s.onload = function() { setTimeout(go, 150); };
+            s.onerror = go;
+            (document.currentScript.parentNode || document.body).appendChild(s);
+            setTimeout(go, 1200);
+          })();
+        </script>
+      </div>
 </body>
 </html>
