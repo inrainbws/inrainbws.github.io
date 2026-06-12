@@ -17,7 +17,7 @@ kind: project
     analog paper response, and darkroom-style controls.
   </p>
   <div class="pub__links">
-    <a class="chip chip--primary" href="https://colorhead.pages.dev/">app</a>
+    <a class="chip chip--primary" href="https://colorhead.app/">app</a>
     <a class="chip" href="https://github.com/kayamerel/pyrawspeed">pyrawspeed</a>
   </div>
 </div>
