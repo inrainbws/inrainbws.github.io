@@ -5,7 +5,7 @@ kind: project
 ---
 
 <div class="pub__thumb-wrap">
-  <img class="pub__thumb" src="/assets/images/colorhead.png" alt="ColorHead app screenshot">
+  <img class="pub__thumb" src="https://colorhead.app/colorhead-app-en.webp" alt="ColorHead app screenshot">
 </div>
 <div class="pub__body">
   <div class="pub__venue-row">
