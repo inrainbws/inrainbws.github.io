@@ -131,8 +131,16 @@ redirect_from:
       font-size: 11px;
       letter-spacing: 0.04em;
       color: var(--ink-55);
+      margin: 0 0 8px;
+    }
+    .hdr__note {
+      font-family: var(--sans);
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--ink-70);
       margin: 0 0 22px;
     }
+    .hdr__note strong { font-weight: 500; color: var(--ink); }
 
     /* Chips */
     .chips {
@@ -371,6 +379,7 @@ redirect_from:
         <a href="https://people.epfl.ch/sabine.susstrunk">Sabine Süsstrunk</a>
       </p>
       <p class="hdr__aff">IVRL · EPFL</p>
+      <p class="hdr__note">Also to be presented at the <strong>ICML 2026 Workshop on Weight-Space Symmetries</strong> (poster).</p>
 
       <div class="chips">
         <a class="chip chip--primary" href="https://arxiv.org/abs/2512.01759">paper</a>
@@ -381,22 +390,22 @@ redirect_from:
       </div>
     </header>
 
-    <!-- ───────────── Live Poster Session (card visible Jun 3–7; zoom link only on Jun 6, 2026) ───────────── -->
-    <section class="section live-session" id="live-session">
+    <!-- ───────────── ICML Workshop Poster Session (card visible Jul 6–10; zoom link only on Jul 10, 2026 KST) ───────────── -->
+    <section class="section live-session" id="icml-session">
       <header class="section-head">
-        <span class="cap cap--ink section-head__num" id="live-session-cap">Jun 6</span>
-        <h2 class="section-head__title" id="live-session-title">Poster session</h2>
+        <span class="cap cap--ink section-head__num" id="icml-session-cap">Jul 10</span>
+        <h2 class="section-head__title" id="icml-session-title">Workshop poster session</h2>
       </header>
 
       <div class="live-session__card">
         <span class="live-session__pulse" aria-hidden="true"></span>
         <p class="live-session__text">
-          <strong>Sat, Jun 6, 2026 · 11:45 AM–1:45 PM MDT (Denver).</strong>
-          Join the Zoom room to chat with me during the CVPR 2026 poster session.
+          <strong>Fri, Jul 10, 2026 · 3:30–5:00 PM KST (Seoul).</strong>
+          Join the Zoom room to chat with me during the ICML 2026 Workshop on Weight-Space Symmetries poster session.
         </p>
-        <a class="chip chip--primary live-session__join" href="https://epfl.zoom.us/j/63975566519?pwd=dfnbm7oLl7bfririjCfGEi1vqh68U3.1">open zoom</a>
+        <a class="chip chip--primary live-session__join" href="https://epfl.zoom.us/j/62457584373?pwd=Dp9F8ADGEcCGunzxVuNIBWlIxFXBpM.1">open zoom</a>
         <p class="live-session__link">
-          <a href="https://epfl.zoom.us/j/63975566519?pwd=dfnbm7oLl7bfririjCfGEi1vqh68U3.1">https://epfl.zoom.us/j/63975566519?pwd=dfnbm7oLl7bfririjCfGEi1vqh68U3.1</a>
+          <a href="https://epfl.zoom.us/j/62457584373?pwd=Dp9F8ADGEcCGunzxVuNIBWlIxFXBpM.1">https://epfl.zoom.us/j/62457584373?pwd=Dp9F8ADGEcCGunzxVuNIBWlIxFXBpM.1</a>
         </p>
         <p class="live-session__note">The Zoom link will appear here on the day of the session.</p>
       </div>
@@ -475,24 +484,25 @@ redirect_from:
   </article>
 
   <script>
-    // Show the poster-session card for the whole CVPR period (Jun 3–7, 2026,
-    // Denver / MDT, UTC-6) regardless of the visitor's local timezone.
-    // The Zoom link itself is revealed only on the session day (Jun 6).
+    // ICML 2026 Workshop on Weight-Space Symmetries poster session.
+    // Card visible Jul 6–10, 2026 (Seoul / KST, UTC+9) regardless of the
+    // visitor's local timezone; the Zoom link is revealed only on the
+    // session day (Jul 10, when the 15:30–17:00 KST slot runs).
     (function () {
-      var showStart = Date.UTC(2026, 5, 3, 6, 0, 0); // Jun 3 00:00 MDT
-      var showEnd   = Date.UTC(2026, 5, 8, 6, 0, 0); // Jun 8 00:00 MDT (end of Jun 7)
-      var liveStart = Date.UTC(2026, 5, 6, 6, 0, 0); // Jun 6 00:00 MDT
-      var liveEnd   = Date.UTC(2026, 5, 7, 6, 0, 0); // Jun 7 00:00 MDT
+      var showStart = Date.UTC(2026, 6, 5, 15, 0, 0); // Jul 6 00:00 KST
+      var showEnd   = Date.UTC(2026, 6, 10, 15, 0, 0); // Jul 11 00:00 KST (end of Jul 10)
+      var liveStart = Date.UTC(2026, 6, 9, 15, 0, 0); // Jul 10 00:00 KST
+      var liveEnd   = Date.UTC(2026, 6, 10, 15, 0, 0); // Jul 11 00:00 KST
       var now = Date.now();
-      var el = document.getElementById('live-session');
+      var el = document.getElementById('icml-session');
       if (!el || now < showStart || now >= showEnd) return;
       el.style.display = 'block';
       if (now >= liveStart && now < liveEnd) {
         el.classList.add('live-session--live');
-        var cap = document.getElementById('live-session-cap');
-        var title = document.getElementById('live-session-title');
+        var cap = document.getElementById('icml-session-cap');
+        var title = document.getElementById('icml-session-title');
         if (cap) cap.textContent = 'Today';
-        if (title) title.innerHTML = 'Poster session <em>today</em>';
+        if (title) title.innerHTML = 'Workshop poster session <em>today</em>';
       }
     })();
   </script>
