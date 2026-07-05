@@ -295,11 +295,34 @@ redirect_from:
     .tldr__item {
       padding: 28px 30px;
       display: flex;
-      gap: 18px;
-      align-items: flex-start;
+      flex-direction: column;
+      gap: 16px;
     }
     .tldr__item + .tldr__item {
       border-left: 1px solid var(--rule);
+    }
+    .tldr__fig {
+      display: block;
+      border: 1px solid var(--rule);
+      background: #fff;
+      height: 350px;
+      padding: 16px;
+      transition: border-color 160ms ease;
+    }
+    .tldr__fig:hover { border-color: var(--ink); }
+    .tldr__fig img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .tldr__cap {
+      display: block;
+      margin: -6px 0 0;
+    }
+    .tldr__row {
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
     }
     .tldr__num {
       font-family: var(--serif);
@@ -336,6 +359,8 @@ redirect_from:
       }
       .tldr__num { font-size: 36px; }
       .tldr__body { font-size: 15px; }
+      .tldr__fig { height: auto; }
+      .tldr__fig img { height: auto; }
     }
 
     /* BibTeX */
@@ -371,7 +396,7 @@ redirect_from:
         <span class="cap">Poster</span>
       </div>
 
-      <h1 class="hdr__title">Weight Space Representation Learning <br> <em>via</em> Neural Field Adaptation</h1>
+      <h1 class="hdr__title">Weight Space Representation Learning <br> via Neural Field Adaptation</h1>
 
       <p class="hdr__authors">
         <span class="hdr__authors-me">Zhuoqian Yang</span>,
@@ -379,18 +404,18 @@ redirect_from:
         <a href="https://people.epfl.ch/sabine.susstrunk">Sabine Süsstrunk</a>
       </p>
       <p class="hdr__aff">IVRL · EPFL</p>
-      <p class="hdr__note">Also to be presented at the <strong>ICML 2026 Workshop on Weight-Space Symmetries</strong> (poster).</p>
+      <p class="hdr__note">Also to be presented at the <strong>ICML 2026 Workshop on Weight-Space Symmetries</strong>.</p>
 
       <div class="chips">
         <a class="chip chip--primary" href="https://arxiv.org/abs/2512.01759">paper</a>
         <a class="chip" href="https://github.com/inrainbws/wsr.pytorch">code</a>
-        <a class="chip" href="https://github.com/inrainbws/peft-mlora">peft-mlora</a>
+        <!-- <a class="chip" href="https://github.com/inrainbws/peft-mlora">peft-mlora</a> -->
         <a class="chip" href="https://www.youtube.com/watch?v=ppzfOqzrwvM">video</a>
         <a class="chip" href="/assets/wsr/poster.pdf">poster (pdf)</a>
       </div>
     </header>
 
-    <!-- ───────────── ICML Workshop Poster Session (card visible Jul 6–10; zoom link only on Jul 10, 2026 KST) ───────────── -->
+    <!-- ───────────── ICML Workshop Poster Session (card + zoom link visible through Jul 12, 2026 KST, then hidden) ───────────── -->
     <section class="section live-session" id="icml-session">
       <header class="section-head">
         <span class="cap cap--ink section-head__num" id="icml-session-cap">Jul 10</span>
@@ -420,16 +445,26 @@ redirect_from:
 
       <div class="tldr">
         <div class="tldr__item">
-          <span class="tldr__num">1</span>
-          <p class="tldr__body">
-            Properly constrained weights exhibit <em>semantic structure</em> and serve as <em>effective data representations</em>.
-          </p>
+          <a class="tldr__fig" href="/assets/wsr/fig_tsne_perturb.pdf">
+            <img src="/assets/wsr/fig_tsne_perturb.png" alt="t-SNE of weight-space representations, colored by object category and sized by perturbation strength across MLP, LoRA, and mLoRA parameterizations">
+          </a>
+          <div class="tldr__row">
+            <span class="tldr__num">1</span>
+            <p class="tldr__body">
+              Properly constrained weights exhibit <em>semantic structure</em> and serve as <em>effective data representations</em>.
+            </p>
+          </div>
         </div>
         <div class="tldr__item">
-          <span class="tldr__num">2</span>
-          <p class="tldr__body">
-            Weight-space geometry <em>correlates strongly</em> with diffusion <em>generation quality</em>.
-          </p>
+          <a class="tldr__fig" href="/assets/wsr/fig_qualitative.jpg">
+            <img src="/assets/wsr/fig_qualitative.jpg" alt="Qualitative comparison of unconditional generation: HyperDiffusion versus ours on ShapeNet shapes and FFHQ faces">
+          </a>
+          <div class="tldr__row">
+            <span class="tldr__num">2</span>
+            <p class="tldr__body">
+              <em>Structured</em> weight space enables <em>effective weight space generation</em>.
+            </p>
+          </div>
         </div>
       </div>
     </section>
@@ -485,20 +520,19 @@ redirect_from:
 
   <script>
     // ICML 2026 Workshop on Weight-Space Symmetries poster session.
-    // Card visible Jul 6–10, 2026 (Seoul / KST, UTC+9) regardless of the
-    // visitor's local timezone; the Zoom link is revealed only on the
-    // session day (Jul 10, when the 15:30–17:00 KST slot runs).
+    // Card + Zoom link are shown through the end of Jul 12, 2026 (Seoul / KST,
+    // UTC+9) regardless of the visitor's local timezone, then hidden. The
+    // heading switches to "today" wording only during the Jul 10 session slot.
     (function () {
-      var showStart = Date.UTC(2026, 6, 5, 15, 0, 0); // Jul 6 00:00 KST
-      var showEnd   = Date.UTC(2026, 6, 10, 15, 0, 0); // Jul 11 00:00 KST (end of Jul 10)
-      var liveStart = Date.UTC(2026, 6, 9, 15, 0, 0); // Jul 10 00:00 KST
+      var showEnd   = Date.UTC(2026, 6, 12, 15, 0, 0); // Jul 13 00:00 KST (end of Jul 12)
+      var liveStart = Date.UTC(2026, 6, 9, 15, 0, 0);  // Jul 10 00:00 KST
       var liveEnd   = Date.UTC(2026, 6, 10, 15, 0, 0); // Jul 11 00:00 KST
       var now = Date.now();
       var el = document.getElementById('icml-session');
-      if (!el || now < showStart || now >= showEnd) return;
+      if (!el || now >= showEnd) return;
       el.style.display = 'block';
+      el.classList.add('live-session--live'); // reveal Zoom link, hide the placeholder note
       if (now >= liveStart && now < liveEnd) {
-        el.classList.add('live-session--live');
         var cap = document.getElementById('icml-session-cap');
         var title = document.getElementById('icml-session-title');
         if (cap) cap.textContent = 'Today';
