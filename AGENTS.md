@@ -120,15 +120,13 @@ redirect_from:
 
 Reference assets with relative paths like `../assets/<yourproject>/...`. These pages keep their own `<head>`, fonts, and CSS — don't try to share `site.css` with them.
 
-Every project page must include the MapMyVisitors snippet just before `</body>` (same one as in `_layouts/default.html`). It's wrapped in an off-screen container so the globe widget stays invisible while the script still tracks on load:
+Every project page must include the Umami analytics snippet just before `</body>` (same one as in `_layouts/default.html`):
 
 ```html
-<div style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;" aria-hidden="true">
-  <script type="text/javascript" id="mapmyvisitors" src="//mapmyvisitors.com/map.js?d=OVas2h6GXLWYYpmkZv04q_lmp_6GJZ8tzpKkc6_qt88&cl=ffffff&w=a"></script>
-</div>
+<script defer src="https://cloud.umami.is/script.js" data-website-id="bc4564dd-cfab-41cd-a589-b17c8bb2c848"></script>
 ```
 
-Exception: pages that immediately redirect off-site (like `hg3d.html`) can't just drop in the async script — navigation cancels it before it loads, and MapMyVisitors has no simple pixel-ping endpoint. Don't use the plugin's `redirect_to` front matter (it discards the page body entirely); instead put the URL in a custom front-matter key and, in the body, inject `map.js` and trigger the redirect on its `onload` (after a short delay so the beacon can fire), with a timeout + meta-refresh fallback (see `hg3d.html`).
+Exception: pages that immediately redirect off-site (like `hg3d.html`) can't just drop in the deferred script — navigation cancels it before the pageview is sent. Don't use the plugin's `redirect_to` front matter (it discards the page body entirely); instead put the URL in a custom front-matter key and, in the body, inject `script.js` with `data-auto-track="false"`, call `umami.track()` on its `onload`, and redirect once that promise settles, with a timeout + meta-refresh fallback (see `hg3d.html`).
 
 ### Key Config (`_config.yml`)
 
