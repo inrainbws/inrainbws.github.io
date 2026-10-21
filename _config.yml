@@ -31,5 +31,5 @@ whitelist:
 
 # exclude files
 exclude:
-  - LICENSE
   - README.md
+  - AGENTS.md
