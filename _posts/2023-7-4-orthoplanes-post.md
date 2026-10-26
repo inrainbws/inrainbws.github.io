@@ -4,7 +4,7 @@ title:  "OrthoPlanes: A Novel Representation for Better 3D-Awareness of GANs"
 ---
 
 <div class="pub__thumb-wrap">
-  <img class="pub__thumb" src="/assets/images/op3d.jpg" alt="">
+  <video class="pub__thumb" src="/assets/images/orthoplanes.mp4" poster="/assets/images/orthoplanes.jpg" autoplay loop muted playsinline></video>
 </div>
 <div class="pub__body">
   <div class="pub__venue-row">
