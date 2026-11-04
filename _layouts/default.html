@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="{{ site.isolang }}" itemscope itemtype="http://schema.org/WebPage">
+{% include head.html %}
+<body>
+  <div class="site" id="top">
+
+    <!-- ─────────── Sidebar ─────────── -->
+    <aside class="sidebar">
+      <div class="intro__meta">
+        <!-- <span class="cap">Personal page</span> -->
+        <!-- <span class="cap">EPFL · MMXXVI</span> -->
+      </div>
+
+      <div class="intro__profile">
+        <div class="intro__photo">
+          <img src="{{ '/assets/images/me_o.jpg' | prepend: site.baseurl }}" alt="Zhuoqian Yang">
+        </div>
+        <!-- <div> -->
+          <!-- <span class="cap cap--ink">PhD Candidate at EPFL</span> -->
+          <!-- <div class="intro__location">Lausanne, CH</div> -->
+        <!-- </div> -->
+      </div>
+
+      <h1 class="intro__name">Zhuoqian<br><em>Zack</em><br>Yang</h1>
+      <!-- <div class="intro__nick">also known as <b>Zack</b></div> -->
+
+      <p class="intro__bio">
+        PhD candidate at EPFL, supervised by
+        <a href="https://people.epfl.ch/mathieu.salzmann">Prof.&nbsp;Mathieu Salzmann</a>
+        and
+        <a href="https://people.epfl.ch/sabine.susstrunk">Prof.&nbsp;Sabine Süsstrunk</a>.
+        AI/ML researcher working on generative models and weight-space learning. I also build hobby-driven projects in music, photography, and videography.
+      </p>
+
+      <div class="intro__notice">
+        <p class="intro__notice-title">Open to job opportunities</p>
+        <p class="intro__notice-text">I expect to graduate in late 2027. I am searching for a research internship starting Spring 2027 and a full-time position after graduation. Please get in touch.</p>
+      </div>
+
+      <div class="intro__group">
+        <span class="cap">Reach</span>
+        <div class="intro__email">inrainbws <span>[at]</span> gmail.com</div>
+        <div class="intro__tiles">
+          <a class="intro__tile" href="{{ '/assets/files/CV - Zhuoqian Yang.pdf' | prepend: site.baseurl }}"><span>CV</span><span>pdf</span></a>
+          <a class="intro__tile" href="https://github.com/{{ site.github_username }}"><span>GitHub</span><span>↗</span></a>
+          <a class="intro__tile" href="{{ site.google_scholar }}"><span>Scholar</span><span>↗</span></a>
+          <a class="intro__tile" href="{{ site.linkedin }}"><span>LinkedIn</span><span>↗</span></a>
+        </div>
+      </div>
+
+      <div class="intro__group">
+        <span class="cap">Previously</span>
+        <ul class="intro__exp">
+          <li>
+            <div class="intro__exp-years">2021 — 2023</div>
+            <div class="intro__exp-text">Research Engineer at Shanghai AI Lab, with <a href="https://daibo.info">Dr.&nbsp;Bo Dai</a> and <a href="https://wywu.github.io">Dr.&nbsp;Wayne Wu</a>.</div>
+          </li>
+          <li>
+            <div class="intro__exp-years">2019 — 2020</div>
+            <div class="intro__exp-text">M.S. in Computer Vision, Robotics Institute, Carnegie Mellon University, with <a href="https://www.laszlojeni.com">Prof.&nbsp;Laszlo Jeni</a>.</div>
+          </li>
+          <li>
+            <div class="intro__exp-years">2015 — 2019</div>
+            <div class="intro__exp-text">B.S. in Software Engineering, Beihang University, with <a href="https://scholar.google.com/citations?user=gl_tc8IAAAAJ&amp;hl=en">Prof.&nbsp;Zengchang Qin</a> and <a href="https://scholar.google.com/citations?user=7JLPFHgAAAAJ&amp;hl=en">Prof.&nbsp;Yang Yang</a>.</div>
+          </li>
+        </ul>
+      </div>
+
+      <p class="intro__quote">Currently thinking about the geometry of weight space.</p>
+    </aside>
+
+    <!-- ─────────── Main ─────────── -->
+    <main class="main">
+      {{ content }}
+    </main>
+
+  </div>
+
+  <!-- Umami analytics -->
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="bc4564dd-cfab-41cd-a589-b17c8bb2c848"></script>
+</body>
+</html>

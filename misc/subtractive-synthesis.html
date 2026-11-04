@@ -1,0 +1,1094 @@
+---
+permalink: /subtractive-synthesis/
+redirect_from:
+  - /subtractive-synthesis
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Subtractive Synthesis: Building a Brass Sound</title>
+<style>
+  :root {
+    --bg: #fafaf6;
+    --panel: #ffffff;
+    --accent: #c7613e;
+    --accent2: #4a6f8a;
+    --text: #2a2a2a;
+    --muted: #8a8a85;
+    --border: #e8e4dc;
+    --canvas-bg: #f4f1ea;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 14px;
+    line-height: 1.45;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .wrap {
+    max-width: 1500px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    gap: 10px;
+  }
+  header {
+    line-height: 1.1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  h1 {
+    font-size: 1.45rem;
+    color: var(--text);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .lede { color: var(--muted); font-size: 0.82rem; margin-top: 2px; }
+
+  /* Tab switcher (top-right of header) */
+  .tabs {
+    display: inline-flex;
+    background: #f0ece4;
+    padding: 2px;
+    border-radius: 7px;
+    flex-shrink: 0;
+  }
+  .tab {
+    background: transparent;
+    color: var(--muted);
+    border: none;
+    padding: 4px 10px;
+    border-radius: 5px;
+    font: 500 0.74rem 'Inter', system-ui, sans-serif;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active {
+    background: var(--panel);
+    color: var(--text);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Views */
+  .view { display: none; }
+  .view.active {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    gap: 10px;
+  }
+
+  /* Diagram view */
+  .diagram-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px 12px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .diagram-card h2 { font-size: 1.3rem; font-weight: 600; color: var(--text); }
+  .diagram-card .diagram-desc {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.4;
+    margin: 6px 0 14px;
+  }
+  .diagram-svg {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    flex: 1.2;
+    min-height: 0;
+  }
+  .step {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .step-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .badge {
+    background: var(--text);
+    color: #fff;
+    font-weight: 600;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    flex-shrink: 0;
+    font-size: 0.78rem;
+  }
+  .step h2 { font-size: 0.92rem; line-height: 1.2; font-weight: 600; }
+  .tag {
+    display: inline-block;
+    background: #f0ece4;
+    color: var(--muted);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.68rem;
+    margin-left: 4px;
+    vertical-align: middle;
+    font-weight: 500;
+  }
+  .step p {
+    color: var(--muted);
+    margin: 3px 0 8px;
+    font-size: 0.75rem;
+    line-height: 1.4;
+  }
+  canvas.thumb {
+    width: 100%;
+    flex: 1;
+    min-height: 50px;
+    background: var(--canvas-bg);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    margin-bottom: 8px;
+    display: block;
+  }
+  .controls {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  button {
+    background: var(--text);
+    color: #fff;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 0.76rem;
+    transition: opacity 0.1s;
+  }
+  button:hover { opacity: 0.85; }
+  button.secondary {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  button.secondary:hover { background: #f0ece4; opacity: 1; }
+  button.tiny { padding: 4px 8px; font-size: 0.72rem; }
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--muted);
+    font-size: 0.7rem;
+    width: 100%;
+    margin-top: 6px;
+  }
+  input[type=range] { accent-color: var(--accent); flex: 1; min-width: 0; }
+  #cutoffVal { font-variant-numeric: tabular-nums; min-width: 50px; text-align: right; }
+
+  /* Oscilloscope */
+  .scope {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
+    flex: 1.6;
+    min-height: 0;
+  }
+  .scope-screen {
+    flex: 1;
+    position: relative;
+    background: var(--canvas-bg);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .scope-screen canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .scope-label {
+    position: absolute;
+    top: 6px;
+    left: 8px;
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .scope-status {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    font-size: 0.68rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .scope-side {
+    width: 150px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 0.72rem;
+  }
+  .scope-side .knob {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .scope-side label {
+    color: var(--muted);
+    text-transform: uppercase;
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+  }
+  .scope-side .val { color: var(--text); font-variant-numeric: tabular-nums; }
+  .scope-side .row-btns { display: flex; gap: 4px; flex-wrap: wrap; }
+
+  /* Bottom keyboard */
+  .keys-bar {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .keys-bar .meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .keys-bar h2 { color: var(--text); font-size: 0.95rem; font-weight: 600; }
+  .keys-bar .hint { color: var(--muted); font-size: 0.72rem; }
+  .keyboard {
+    display: flex;
+    gap: 3px;
+    flex: 1;
+    height: 70px;
+  }
+  .key {
+    flex: 1;
+    background: #fff;
+    color: #555;
+    border-radius: 0 0 6px 6px;
+    border: 1px solid var(--border);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.08s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0 6px;
+    font-size: 0.85rem;
+    user-select: none;
+  }
+  .key .kbd {
+    font-size: 0.6rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+  }
+  .key:hover { background: #f4f1ea; }
+  .key:active, .key.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .key:active .kbd, .key.active .kbd { color: rgba(255, 255, 255, 0.85); }
+
+  @media (max-width: 1200px) {
+    body { overflow: auto; }
+    .row { grid-template-columns: repeat(3, 1fr); }
+    .scope-side { width: 130px; }
+  }
+  @media (max-width: 720px) {
+    .row { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 480px) {
+    .row { grid-template-columns: 1fr; }
+    .scope { flex-direction: column; }
+    .scope-side { width: 100%; flex-direction: row; flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <h1>Subtractive Synthesis: building a brass sound</h1>
+      <p class="lede">Start loud and bright, then carve away. Watch every step on the live oscilloscope.</p>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-tab="demo" role="tab">Demo</button>
+      <button class="tab" data-tab="diagram" role="tab">Diagram</button>
+    </nav>
+  </header>
+
+  <div class="view active" data-view="demo">
+
+  <div class="row">
+
+    <div class="step">
+      <div class="step-head"><div class="badge">1</div><h2>Oscillator<span class="tag">sawtooth</span></h2></div>
+      <p>A basic waveform that is harmonic-rich. The raw material we will sculpt.</p>
+      <canvas class="thumb" id="cv1"></canvas>
+      <div class="controls">
+        <button onclick="playRaw()">Play</button>
+        <button class="secondary" onclick="stopAll()">Stop</button>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="badge">2</div><h2>Filter<span class="tag">low pass</span></h2></div>
+      <p>Removes high frequencies.</p>
+      <canvas class="thumb" id="cv2"></canvas>
+      <div class="controls">
+        <button onclick="playFiltered()">Play</button>
+        <button class="secondary" onclick="stopAll()">Stop</button>
+        <div class="slider-row">
+          <span>cutoff</span>
+          <input type="range" id="cutoff" min="200" max="6000" value="1500" oninput="updateCutoff()">
+          <span id="cutoffVal">1500 Hz</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="badge">3</div><h2>Envelope<span class="tag">ADSR</span></h2></div>
+      <p>Shapes volume (amplitude) and brightness (filter cutoff) over time.</p>
+      <canvas class="thumb" id="cv3"></canvas>
+      <div class="controls">
+        <button onclick="playEnveloped()">Play</button>
+        <button class="secondary" onclick="stopAll()">Stop</button>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="badge">4</div><h2>Modulation<span class="tag">LFO</span></h2></div>
+      <p>A 5.5Hz sine wave that oscillates the pitch. Simulates the natural breathing of a player.</p>
+      <canvas class="thumb" id="cv4"></canvas>
+      <div class="controls">
+        <button onclick="playModulated()">Play</button>
+        <button class="secondary" onclick="stopAll()">Stop</button>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="badge">5</div><h2>Unison<span class="tag">detune</span></h2></div>
+      <p>Two sawtooths, one tuned 0.5% sharp. They beat together for a thick, chorused body.</p>
+      <canvas class="thumb" id="cv5"></canvas>
+      <div class="controls">
+        <button onclick="playUnison()">Play</button>
+        <button class="secondary" onclick="stopAll()">Stop</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="scope">
+    <div class="scope-screen">
+      <div class="scope-label">Oscilloscope</div>
+      <div class="scope-status" id="scopeStatus">idle</div>
+      <canvas id="scope"></canvas>
+    </div>
+    <div class="scope-screen">
+      <div class="scope-label">Spectrum</div>
+      <div class="scope-status">log freq · dB</div>
+      <canvas id="spectrum"></canvas>
+    </div>
+    <div class="scope-side">
+      <div class="knob">
+        <label>Time scale</label>
+        <input type="range" id="zoom" min="1" max="32" step="1" value="6">
+        <span class="val" id="zoomVal">6x</span>
+      </div>
+      <div class="knob">
+        <label>Vertical</label>
+        <input type="range" id="vScale" min="0.5" max="4" step="0.1" value="1.4">
+        <span class="val" id="vScaleVal">1.4x</span>
+      </div>
+      <div class="knob">
+        <label>Trigger</label>
+        <div class="row-btns">
+          <button class="tiny" id="trigBtn" onclick="toggleTrigger()">Auto</button>
+          <button class="tiny secondary" id="freezeBtn" onclick="toggleFreeze()">Freeze</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="keys-bar">
+    <div class="meta">
+      <div>
+        <h2>Brass voice</h2>
+        <div class="hint">step 5 played at any pitch · keys A S D F G H J K</div>
+      </div>
+    </div>
+    <div class="keyboard">
+      <div class="key" data-kbd="a" data-freq="261.63" onmousedown="playBrass(261.63)"><span class="kbd">A</span><span>C</span></div>
+      <div class="key" data-kbd="s" data-freq="293.66" onmousedown="playBrass(293.66)"><span class="kbd">S</span><span>D</span></div>
+      <div class="key" data-kbd="d" data-freq="329.63" onmousedown="playBrass(329.63)"><span class="kbd">D</span><span>E</span></div>
+      <div class="key" data-kbd="f" data-freq="349.23" onmousedown="playBrass(349.23)"><span class="kbd">F</span><span>F</span></div>
+      <div class="key" data-kbd="g" data-freq="392.00" onmousedown="playBrass(392.00)"><span class="kbd">G</span><span>G</span></div>
+      <div class="key" data-kbd="h" data-freq="440.00" onmousedown="playBrass(440.00)"><span class="kbd">H</span><span>A</span></div>
+      <div class="key" data-kbd="j" data-freq="493.88" onmousedown="playBrass(493.88)"><span class="kbd">J</span><span>B</span></div>
+      <div class="key" data-kbd="k" data-freq="523.25" onmousedown="playBrass(523.25)"><span class="kbd">K</span><span>C</span></div>
+    </div>
+  </div>
+
+  </div><!-- /view demo -->
+
+  <div class="view" data-view="diagram">
+    <div class="diagram-card">
+      <h2>Signal flow</h2>
+      <p class="diagram-desc">The five components combine into one voice. Audio flows through the orange path; modulators (blue, dashed) shape parameters in real time.</p>
+      <svg class="diagram-svg" viewBox="0 0 1100 560" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrow-audio" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#c7613e"/>
+          </marker>
+          <marker id="arrow-mod" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#4a6f8a"/>
+          </marker>
+        </defs>
+
+        <!-- Modulator: LFO -->
+        <rect x="80" y="30" width="300" height="135" rx="12" fill="#ffffff" stroke="#4a6f8a" stroke-width="2"/>
+        <text x="230" y="76" text-anchor="middle" fill="#4a6f8a" font-size="22" font-weight="600">4 · LFO</text>
+        <text x="230" y="110" text-anchor="middle" fill="#8a8a85" font-size="16">sine, 5.5 Hz</text>
+        <text x="230" y="140" text-anchor="middle" fill="#8a8a85" font-size="16">vibrato source</text>
+
+        <!-- Modulator: Envelope -->
+        <rect x="470" y="30" width="460" height="135" rx="12" fill="#ffffff" stroke="#4a6f8a" stroke-width="2"/>
+        <text x="700" y="76" text-anchor="middle" fill="#4a6f8a" font-size="22" font-weight="600">3 · Envelope (ADSR)</text>
+        <text x="700" y="110" text-anchor="middle" fill="#8a8a85" font-size="16">attack · decay · sustain · release</text>
+        <text x="700" y="140" text-anchor="middle" fill="#8a8a85" font-size="16">drives both filter cutoff and amplitude</text>
+
+        <!-- Modulation arrows (blue, dashed) -->
+        <path d="M 230 165 L 230 305" stroke="#4a6f8a" stroke-width="2.2" stroke-dasharray="8,5" fill="none" marker-end="url(#arrow-mod)"/>
+        <text x="248" y="245" fill="#4a6f8a" font-size="16" font-weight="500">pitch mod</text>
+
+        <path d="M 580 165 L 580 320" stroke="#4a6f8a" stroke-width="2.2" stroke-dasharray="8,5" fill="none" marker-end="url(#arrow-mod)"/>
+        <text x="598" y="248" fill="#4a6f8a" font-size="16" font-weight="500">→ cutoff</text>
+
+        <path d="M 820 165 L 820 320" stroke="#4a6f8a" stroke-width="2.2" stroke-dasharray="8,5" fill="none" marker-end="url(#arrow-mod)"/>
+        <text x="838" y="248" fill="#4a6f8a" font-size="16" font-weight="500">→ amplitude</text>
+
+        <!-- Audio path: Oscillator + Unison -->
+        <rect x="30" y="305" width="410" height="180" rx="12" fill="#ffffff" stroke="#c7613e" stroke-width="2"/>
+        <text x="235" y="350" text-anchor="middle" fill="#c7613e" font-size="22" font-weight="600">1 · Oscillator   +   5 · Unison</text>
+        <text x="235" y="388" text-anchor="middle" fill="#8a8a85" font-size="16">sawtooth at frequency f</text>
+        <text x="235" y="416" text-anchor="middle" fill="#8a8a85" font-size="16">+ second sawtooth at f × 1.005</text>
+        <text x="235" y="458" text-anchor="middle" fill="#8a8a85" font-size="14" font-style="italic">harmonic-rich; the two oscillators beat for thickness</text>
+
+        <!-- Filter -->
+        <rect x="480" y="320" width="200" height="150" rx="12" fill="#ffffff" stroke="#c7613e" stroke-width="2"/>
+        <text x="580" y="370" text-anchor="middle" fill="#c7613e" font-size="22" font-weight="600">2 · Filter</text>
+        <text x="580" y="408" text-anchor="middle" fill="#8a8a85" font-size="16">low-pass biquad</text>
+        <text x="580" y="438" text-anchor="middle" fill="#8a8a85" font-size="16">Q = 4</text>
+
+        <!-- Amp -->
+        <rect x="720" y="320" width="200" height="150" rx="12" fill="#ffffff" stroke="#c7613e" stroke-width="2"/>
+        <text x="820" y="370" text-anchor="middle" fill="#c7613e" font-size="22" font-weight="600">Amplifier</text>
+        <text x="820" y="408" text-anchor="middle" fill="#8a8a85" font-size="16">gain node</text>
+        <text x="820" y="438" text-anchor="middle" fill="#8a8a85" font-size="16">shapes loudness</text>
+
+        <!-- Output -->
+        <text x="1010" y="385" text-anchor="middle" fill="#2a2a2a" font-size="22" font-weight="600">Output</text>
+        <text x="1010" y="420" text-anchor="middle" fill="#8a8a85" font-size="22">((( ♪ )))</text>
+
+        <!-- Audio path arrows (orange) -->
+        <path d="M 440 395 L 477 395" stroke="#c7613e" stroke-width="3" fill="none" marker-end="url(#arrow-audio)"/>
+        <path d="M 680 395 L 717 395" stroke="#c7613e" stroke-width="3" fill="none" marker-end="url(#arrow-audio)"/>
+        <path d="M 920 395 L 968 395" stroke="#c7613e" stroke-width="3" fill="none" marker-end="url(#arrow-audio)"/>
+
+        <!-- Legend -->
+        <line x1="60" y1="535" x2="104" y2="535" stroke="#c7613e" stroke-width="3" marker-end="url(#arrow-audio)"/>
+        <text x="118" y="540" fill="#8a8a85" font-size="15">audio signal</text>
+        <line x1="270" y1="535" x2="314" y2="535" stroke="#4a6f8a" stroke-width="2.2" stroke-dasharray="8,5" marker-end="url(#arrow-mod)"/>
+        <text x="328" y="540" fill="#8a8a85" font-size="15">control / modulation</text>
+      </svg>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+// Master chain: everything routes through master -> analyser -> destination
+const master = ctx.createGain();
+master.gain.value = 1.0;
+const analyser = ctx.createAnalyser();
+analyser.fftSize = 4096;
+analyser.smoothingTimeConstant = 0;
+master.connect(analyser);
+analyser.connect(ctx.destination);
+
+// Parallel analyser for the spectrum view — smoothed for readability,
+// kept separate so the oscilloscope still gets unsmoothed snapshots.
+const spectrumAnalyser = ctx.createAnalyser();
+spectrumAnalyser.fftSize = 4096;
+spectrumAnalyser.smoothingTimeConstant = 0.7;
+master.connect(spectrumAnalyser);
+
+const scopeBuffer = new Float32Array(analyser.fftSize);
+const specBuffer = new Float32Array(spectrumAnalyser.frequencyBinCount);
+
+let activeNodes = [];
+function stopAll() {
+  activeNodes.forEach(n => { try { n.stop(); } catch(e) {} });
+  activeNodes = [];
+}
+function track(n) { activeNodes.push(n); return n; }
+
+// All sounds connect to `master` (not ctx.destination) so they show up on the scope
+function playRaw() {
+  stopAll();
+  const o = ctx.createOscillator();
+  const g = ctx.createGain();
+  o.type = 'sawtooth';
+  o.frequency.value = 220;
+  g.gain.value = 0.18;
+  o.connect(g).connect(master);
+  o.start();
+  o.stop(ctx.currentTime + 1.5);
+  setStatus('sawtooth 220Hz');
+  track(o);
+}
+
+let liveFilter = null;
+function playFiltered() {
+  stopAll();
+  const o = ctx.createOscillator();
+  const f = ctx.createBiquadFilter();
+  const g = ctx.createGain();
+  o.type = 'sawtooth';
+  o.frequency.value = 220;
+  f.type = 'lowpass';
+  f.frequency.value = parseFloat(document.getElementById('cutoff').value);
+  f.Q.value = 4;
+  g.gain.value = 0.18;
+  o.connect(f).connect(g).connect(master);
+  o.start();
+  o.stop(ctx.currentTime + 2.5);
+  liveFilter = f;
+  setStatus('filtered saw');
+  track(o);
+}
+function updateCutoff() {
+  const v = document.getElementById('cutoff').value;
+  document.getElementById('cutoffVal').textContent = v + ' Hz';
+  if (liveFilter) liveFilter.frequency.setTargetAtTime(parseFloat(v), ctx.currentTime, 0.05);
+}
+
+// Shared brass envelope settings, applied identically across steps 3, 4, 5, and the keyboard
+function brassFilterEnv(f, t) {
+  f.type = 'lowpass';
+  f.Q.value = 4;
+  f.frequency.setValueAtTime(500, t);
+  f.frequency.linearRampToValueAtTime(3500, t + 0.06);
+  f.frequency.linearRampToValueAtTime(1400, t + 0.45);
+}
+function brassAmpEnv(g, t) {
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(0.18, t + 0.04);
+  g.gain.linearRampToValueAtTime(0.13, t + 0.3);
+  g.gain.setValueAtTime(0.13, t + 0.9);
+  g.gain.linearRampToValueAtTime(0, t + 1.3);
+}
+const BRASS_DURATION = 1.4;
+
+function playEnveloped() {
+  stopAll();
+  const t = ctx.currentTime;
+  const o = ctx.createOscillator();
+  const f = ctx.createBiquadFilter();
+  const g = ctx.createGain();
+  o.type = 'sawtooth';
+  o.frequency.value = 220;
+  brassFilterEnv(f, t);
+  brassAmpEnv(g, t);
+  o.connect(f).connect(g).connect(master);
+  o.start(t);
+  o.stop(t + BRASS_DURATION);
+  setStatus('ADSR envelope');
+  track(o);
+}
+
+function playModulated() {
+  stopAll();
+  const t = ctx.currentTime;
+  const o = ctx.createOscillator();
+  const lfo = ctx.createOscillator();
+  const lfoGain = ctx.createGain();
+  const f = ctx.createBiquadFilter();
+  const g = ctx.createGain();
+  o.type = 'sawtooth';
+  o.frequency.value = 220;
+  lfo.type = 'sine';
+  lfo.frequency.value = 5.5;
+  lfoGain.gain.value = 220 * 0.012;
+  lfo.connect(lfoGain);
+  lfoGain.connect(o.frequency);
+  brassFilterEnv(f, t);
+  brassAmpEnv(g, t);
+  o.connect(f).connect(g).connect(master);
+  o.start(t); lfo.start(t);
+  o.stop(t + BRASS_DURATION); lfo.stop(t + BRASS_DURATION);
+  setStatus('LFO vibrato');
+  track(o); track(lfo);
+}
+
+function playUnison() {
+  // This is identical to playBrass(220). Step 5 = the brass voice at A3.
+  stopAll();
+  playVoice(220, 'unison detune');
+}
+
+function playBrass(freq) {
+  playVoice(freq, 'brass ' + freq.toFixed(1) + 'Hz');
+}
+
+function playVoice(freq, statusText) {
+  const t = ctx.currentTime;
+  const o = ctx.createOscillator();
+  const o2 = ctx.createOscillator();
+  const lfo = ctx.createOscillator();
+  const lfoGain = ctx.createGain();
+  const f = ctx.createBiquadFilter();
+  const g = ctx.createGain();
+  o.type = 'sawtooth'; o.frequency.value = freq;
+  o2.type = 'sawtooth'; o2.frequency.value = freq * 1.005;
+  lfo.type = 'sine';
+  lfo.frequency.value = 5.5;
+  lfoGain.gain.value = freq * 0.012;
+  lfo.connect(lfoGain);
+  lfoGain.connect(o.frequency);
+  lfoGain.connect(o2.frequency);
+  brassFilterEnv(f, t);
+  brassAmpEnv(g, t);
+  o.connect(f); o2.connect(f);
+  f.connect(g).connect(master);
+  o.start(t); o2.start(t); lfo.start(t);
+  o.stop(t + BRASS_DURATION); o2.stop(t + BRASS_DURATION); lfo.stop(t + BRASS_DURATION);
+  setStatus(statusText);
+  if (statusText === 'unison detune') { track(o); track(o2); track(lfo); }
+}
+
+// ===== Static thumbnail waves (the four step cards) =====
+const WAVE_COLOR = '#c7613e';
+const ALT_COLOR = '#4a6f8a';
+const GRID_COLOR = '#d8d3c8';
+const LABEL_COLOR = '#9a948b';
+
+function drawSaw(canvas) {
+  const c = canvas.getContext('2d');
+  const w = canvas.width = canvas.clientWidth;
+  const h = canvas.height = canvas.clientHeight;
+  c.clearRect(0,0,w,h);
+  c.strokeStyle = WAVE_COLOR; c.lineWidth = 1.6;
+  c.beginPath();
+  for (let i = 0; i < 3; i++) {
+    const x0 = (i / 3) * w;
+    const x1 = ((i + 1) / 3) * w;
+    c.moveTo(x0, h * 0.85);
+    c.lineTo(x1, h * 0.15);
+    c.lineTo(x1, h * 0.85);
+  }
+  c.stroke();
+}
+function drawFilteredSaw(canvas) {
+  const c = canvas.getContext('2d');
+  const w = canvas.width = canvas.clientWidth;
+  const h = canvas.height = canvas.clientHeight;
+  c.clearRect(0,0,w,h);
+  c.strokeStyle = ALT_COLOR; c.lineWidth = 1.6;
+  c.beginPath();
+  for (let x = 0; x < w; x++) {
+    const t = x / w * Math.PI * 6;
+    const y = h/2 + Math.sin(t) * h * 0.32 + Math.sin(t*2) * h * 0.05;
+    if (x === 0) c.moveTo(x, y); else c.lineTo(x, y);
+  }
+  c.stroke();
+}
+function drawEnvelope(canvas) {
+  const c = canvas.getContext('2d');
+  const w = canvas.width = canvas.clientWidth;
+  const h = canvas.height = canvas.clientHeight;
+  c.clearRect(0,0,w,h);
+  c.strokeStyle = WAVE_COLOR; c.lineWidth = 1.6;
+  c.beginPath();
+  c.moveTo(0, h - 12);
+  c.lineTo(w*0.08, 10);
+  c.lineTo(w*0.22, h*0.35);
+  c.lineTo(w*0.75, h*0.42);
+  c.lineTo(w*0.95, h - 12);
+  c.stroke();
+  c.fillStyle = LABEL_COLOR;
+  c.font = '10px sans-serif';
+  c.fillText('A', w*0.05, h-2);
+  c.fillText('D', w*0.18, h-2);
+  c.fillText('S', w*0.5, h-2);
+  c.fillText('R', w*0.85, h-2);
+}
+function drawModulated(canvas) {
+  const c = canvas.getContext('2d');
+  const w = canvas.width = canvas.clientWidth;
+  const h = canvas.height = canvas.clientHeight;
+  c.clearRect(0,0,w,h);
+  c.strokeStyle = ALT_COLOR; c.lineWidth = 1.6;
+  c.beginPath();
+  for (let x = 0; x < w; x++) {
+    const slow = Math.sin(x / w * Math.PI * 2) * 8;
+    const fast = Math.sin(x / w * Math.PI * 14 + slow * 0.1);
+    const y = h/2 + fast * h * 0.32;
+    if (x === 0) c.moveTo(x, y); else c.lineTo(x, y);
+  }
+  c.stroke();
+}
+
+function drawUnison(canvas) {
+  const c = canvas.getContext('2d');
+  const w = canvas.width = canvas.clientWidth;
+  const h = canvas.height = canvas.clientHeight;
+  c.clearRect(0,0,w,h);
+  // Two slightly offset sawtooths overlaid to suggest detune
+  const cycles = 3;
+  function drawSawAt(color, phaseShift, alpha) {
+    c.globalAlpha = alpha;
+    c.strokeStyle = color;
+    c.lineWidth = 1.6;
+    c.beginPath();
+    for (let i = 0; i < cycles; i++) {
+      const x0 = (i / cycles) * w + phaseShift;
+      const x1 = ((i + 1) / cycles) * w + phaseShift;
+      c.moveTo(x0, h * 0.85);
+      c.lineTo(x1, h * 0.15);
+      c.lineTo(x1, h * 0.85);
+    }
+    c.stroke();
+  }
+  drawSawAt(WAVE_COLOR, 0, 0.85);
+  drawSawAt(ALT_COLOR, w * 0.04, 0.85);
+  c.globalAlpha = 1;
+}
+
+function redrawThumbs() {
+  drawSaw(document.getElementById('cv1'));
+  drawFilteredSaw(document.getElementById('cv2'));
+  drawEnvelope(document.getElementById('cv3'));
+  drawModulated(document.getElementById('cv4'));
+  drawUnison(document.getElementById('cv5'));
+}
+
+// ===== Live oscilloscope =====
+const scopeCanvas = document.getElementById('scope');
+const sctx = scopeCanvas.getContext('2d');
+const spectrumCanvas = document.getElementById('spectrum');
+const specCtx = spectrumCanvas.getContext('2d');
+let zoom = 6;
+let vScale = 1.4;
+let trigEnabled = true;
+let frozen = false;
+let frozenSnapshot = null;
+let frozenSpectrum = null;
+
+function setStatus(text) {
+  document.getElementById('scopeStatus').textContent = text;
+}
+
+document.getElementById('zoom').addEventListener('input', (e) => {
+  zoom = parseInt(e.target.value);
+  document.getElementById('zoomVal').textContent = zoom + 'x';
+});
+document.getElementById('vScale').addEventListener('input', (e) => {
+  vScale = parseFloat(e.target.value);
+  document.getElementById('vScaleVal').textContent = vScale.toFixed(1) + 'x';
+});
+function toggleTrigger() {
+  trigEnabled = !trigEnabled;
+  document.getElementById('trigBtn').textContent = trigEnabled ? 'Auto' : 'Free';
+}
+function toggleFreeze() {
+  frozen = !frozen;
+  const btn = document.getElementById('freezeBtn');
+  btn.textContent = frozen ? 'Run' : 'Freeze';
+  if (frozen) {
+    analyser.getFloatTimeDomainData(scopeBuffer);
+    frozenSnapshot = new Float32Array(scopeBuffer);
+    spectrumAnalyser.getFloatFrequencyData(specBuffer);
+    frozenSpectrum = new Float32Array(specBuffer);
+  } else {
+    frozenSnapshot = null;
+    frozenSpectrum = null;
+  }
+}
+
+function sizeCanvas(canvas) {
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.getContext('2d').scale(dpr, dpr);
+  }
+}
+
+function drawScope() {
+  sizeCanvas(scopeCanvas);
+  const w = scopeCanvas.clientWidth;
+  const h = scopeCanvas.clientHeight;
+  sctx.clearRect(0, 0, w, h);
+
+  // Grid
+  sctx.strokeStyle = 'rgba(120, 110, 90, 0.12)';
+  sctx.lineWidth = 1;
+  sctx.beginPath();
+  for (let i = 1; i < 10; i++) {
+    const x = i * w / 10;
+    sctx.moveTo(x, 0); sctx.lineTo(x, h);
+  }
+  for (let i = 1; i < 8; i++) {
+    const y = i * h / 8;
+    sctx.moveTo(0, y); sctx.lineTo(w, y);
+  }
+  sctx.stroke();
+  // Center line
+  sctx.strokeStyle = 'rgba(120, 110, 90, 0.28)';
+  sctx.beginPath();
+  sctx.moveTo(0, h/2); sctx.lineTo(w, h/2);
+  sctx.stroke();
+
+  // Get samples
+  let buf;
+  if (frozen && frozenSnapshot) {
+    buf = frozenSnapshot;
+  } else {
+    analyser.getFloatTimeDomainData(scopeBuffer);
+    buf = scopeBuffer;
+  }
+
+  // Compute peak for activity indicator
+  let peak = 0;
+  for (let i = 0; i < buf.length; i++) {
+    const v = Math.abs(buf[i]);
+    if (v > peak) peak = v;
+  }
+
+  // Trigger: find first rising zero crossing in first half
+  let start = 0;
+  if (trigEnabled && peak > 0.01) {
+    const half = Math.floor(buf.length / 2);
+    for (let i = 1; i < half; i++) {
+      if (buf[i-1] <= 0 && buf[i] > 0) { start = i; break; }
+    }
+  }
+
+  // Determine samples to draw based on zoom
+  const samples = Math.min(Math.floor(buf.length / zoom), buf.length - start);
+
+  // Draw waveform
+  sctx.strokeStyle = peak > 0.01 ? '#c7613e' : 'rgba(199, 97, 62, 0.35)';
+  sctx.lineWidth = 1.8;
+  sctx.beginPath();
+  for (let i = 0; i < samples; i++) {
+    const x = (i / (samples - 1)) * w;
+    const y = h/2 - buf[start + i] * vScale * (h/2 - 4);
+    if (i === 0) sctx.moveTo(x, y); else sctx.lineTo(x, y);
+  }
+  sctx.stroke();
+
+  if (peak < 0.01 && !frozen) {
+    sctx.fillStyle = 'rgba(138, 138, 133, 0.7)';
+    sctx.font = '12px sans-serif';
+    sctx.fillText('press a Play button to see the wave', 14, h - 12);
+  }
+}
+
+function drawSpectrum() {
+  sizeCanvas(spectrumCanvas);
+  const w = spectrumCanvas.clientWidth;
+  const h = spectrumCanvas.clientHeight;
+  specCtx.clearRect(0, 0, w, h);
+
+  const nyquist = ctx.sampleRate / 2;
+  const minFreq = 30;
+  const maxFreq = Math.min(nyquist, 20000);
+  const logMin = Math.log10(minFreq);
+  const logMax = Math.log10(maxFreq);
+  const freqToX = f => ((Math.log10(f) - logMin) / (logMax - logMin)) * w;
+
+  const minDb = -90;
+  const maxDb = -10;
+  const dbToY = db => {
+    const n = (db - minDb) / (maxDb - minDb);
+    return h - Math.max(0, Math.min(1, n)) * (h - 4);
+  };
+
+  // Minor + major frequency grid
+  const minorFreqs = [50, 70, 200, 300, 500, 700, 2000, 3000, 5000, 7000];
+  const majorFreqs = [100, 1000, 10000];
+  specCtx.strokeStyle = 'rgba(120, 110, 90, 0.10)';
+  specCtx.lineWidth = 1;
+  specCtx.beginPath();
+  for (const f of minorFreqs) {
+    const x = freqToX(f);
+    if (x >= 0 && x <= w) { specCtx.moveTo(x, 0); specCtx.lineTo(x, h); }
+  }
+  specCtx.stroke();
+  specCtx.strokeStyle = 'rgba(120, 110, 90, 0.22)';
+  specCtx.beginPath();
+  for (const f of majorFreqs) {
+    const x = freqToX(f);
+    if (x >= 0 && x <= w) { specCtx.moveTo(x, 0); specCtx.lineTo(x, h); }
+  }
+  // Horizontal dB grid every 20 dB
+  for (let db = minDb + 20; db < maxDb; db += 20) {
+    const y = dbToY(db);
+    specCtx.moveTo(0, y); specCtx.lineTo(w, y);
+  }
+  specCtx.stroke();
+
+  // Sample spectrum data
+  let buf;
+  if (frozen && frozenSpectrum) {
+    buf = frozenSpectrum;
+  } else {
+    spectrumAnalyser.getFloatFrequencyData(specBuffer);
+    buf = specBuffer;
+  }
+
+  // Activity check — anything above the floor counts as live
+  let activity = false;
+  for (let i = 1; i < buf.length; i++) {
+    if (buf[i] > -75) { activity = true; break; }
+  }
+
+  // Build the curve in log-frequency space; interpolate between bins
+  const points = new Array(w);
+  for (let x = 0; x < w; x++) {
+    const freq = Math.pow(10, logMin + (x / w) * (logMax - logMin));
+    const binIdx = freq / nyquist * buf.length;
+    const i0 = Math.floor(binIdx);
+    const i1 = Math.min(i0 + 1, buf.length - 1);
+    const frac = binIdx - i0;
+    const db = i0 < 0 ? minDb : buf[i0] * (1 - frac) + buf[i1] * frac;
+    points[x] = dbToY(db);
+  }
+
+  // Filled area
+  const grad = specCtx.createLinearGradient(0, 0, 0, h);
+  grad.addColorStop(0, activity ? 'rgba(199, 97, 62, 0.55)' : 'rgba(199, 97, 62, 0.15)');
+  grad.addColorStop(1, 'rgba(199, 97, 62, 0)');
+  specCtx.fillStyle = grad;
+  specCtx.beginPath();
+  specCtx.moveTo(0, h);
+  for (let x = 0; x < w; x++) specCtx.lineTo(x, points[x]);
+  specCtx.lineTo(w, h);
+  specCtx.closePath();
+  specCtx.fill();
+
+  // Stroke
+  specCtx.strokeStyle = activity ? '#c7613e' : 'rgba(199, 97, 62, 0.4)';
+  specCtx.lineWidth = 1.4;
+  specCtx.beginPath();
+  for (let x = 0; x < w; x++) {
+    if (x === 0) specCtx.moveTo(x, points[x]); else specCtx.lineTo(x, points[x]);
+  }
+  specCtx.stroke();
+
+  // Frequency labels
+  specCtx.fillStyle = LABEL_COLOR;
+  specCtx.font = '10px sans-serif';
+  for (const f of majorFreqs) {
+    const x = freqToX(f);
+    if (x >= 0 && x <= w - 24) {
+      const label = f >= 1000 ? (f / 1000) + 'k' : f.toString();
+      specCtx.fillText(label, x + 3, h - 4);
+    }
+  }
+}
+
+function animate() {
+  drawScope();
+  drawSpectrum();
+  requestAnimationFrame(animate);
+}
+
+window.addEventListener('load', () => {
+  redrawThumbs();
+  animate();
+});
+window.addEventListener('resize', redrawThumbs);
+
+// Computer-keyboard mapping: A S D F G H J K → C D E F G A B C
+const heldKbdKeys = new Set();
+document.addEventListener('keydown', (e) => {
+  if (e.repeat || e.metaKey || e.ctrlKey || e.altKey) return;
+  const tag = (e.target && e.target.tagName) || '';
+  if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+  const k = e.key.toLowerCase();
+  const el = document.querySelector('.key[data-kbd="' + k + '"]');
+  if (!el) return;
+  e.preventDefault();
+  if (heldKbdKeys.has(k)) return;
+  heldKbdKeys.add(k);
+  el.classList.add('active');
+  playBrass(parseFloat(el.dataset.freq));
+});
+document.addEventListener('keyup', (e) => {
+  const k = e.key.toLowerCase();
+  if (!heldKbdKeys.has(k)) return;
+  heldKbdKeys.delete(k);
+  const el = document.querySelector('.key[data-kbd="' + k + '"]');
+  if (el) el.classList.remove('active');
+});
+
+// Tab switcher
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.tab;
+    document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b === btn));
+    document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.dataset.view === target));
+  });
+});
+</script>
+</body>
+</html>

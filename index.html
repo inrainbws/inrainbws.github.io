@@ -1,0 +1,208 @@
+---
+permalink: /
+layout: default
+---
+
+{% comment %}
+  Section 01 — Index of works, split into two parallel tabs:
+  Research (peer-reviewed publications) and Projects (hobby-driven builds).
+  Posts are sorted into tabs by their `kind:` front matter — `kind: project`
+  goes to Projects, everything else defaults to Research. Within each tab the
+  posts are grouped by year via `group_by_exp` into `.year-band` blocks.
+  Tabs are CSS-only (radio inputs) — no JS, consistent with the rest of the site.
+  Each post's body MUST already render the inner publication markup —
+  see style-package/templates/example-post.md for the required pattern.
+{% endcomment %}
+{% assign research_posts = site.posts | where_exp: "post", "post.kind != 'project'" %}
+{% assign project_posts  = site.posts | where_exp: "post", "post.kind == 'project'" %}
+<section class="section">
+  <div class="tabs">
+    <input type="radio" name="works" id="tab-research" class="tabs__input" checked>
+    <input type="radio" name="works" id="tab-projects" class="tabs__input">
+
+    <header class="section-head">
+      <div>
+        <h2 class="tabs__nav" role="tablist">
+          <label class="tabs__tab" for="tab-research" role="tab">Research<span class="tabs__count">{% assign rc = research_posts | size %}{% if rc < 10 %}0{% endif %}{{ rc }}</span></label>
+          <label class="tabs__tab" for="tab-projects" role="tab">Projects<span class="tabs__count">{% assign pc = project_posts | size %}{% if pc < 10 %}0{% endif %}{{ pc }}</span></label>
+        </h2>
+      </div>
+      <div class="section-head__meta">
+        <span class="cap">Updated</span>
+        <div class="section-head__meta-date">{{ site.posts.first.date | date: '%Y · %m · %d' }}</div>
+      </div>
+    </header>
+
+    {% comment %}
+      ── Research panel ──
+      Paginated at 6 items per page so the section stays short. Pages are
+      CSS-only (radio inputs), same no-JS pattern as the tabs. Each page is
+      still grouped into year-bands; a year that straddles a page break simply
+      reappears on the next page.
+    {% endcomment %}
+    <div class="tabs__panel tabs__panel--research" role="tabpanel">
+      {% assign per_page = 6 %}
+      {% assign total = research_posts | size %}
+      {% assign num_pages = total | plus: per_page | minus: 1 | divided_by: per_page %}
+
+      {% for p in (1..num_pages) %}
+        <input type="radio" name="research-page" id="rp-{{ p }}" class="rpage__input"{% if p == 1 %} checked{% endif %}>
+      {% endfor %}
+
+      {% if num_pages > 1 %}
+        <nav class="rpager" aria-label="Research pages">
+          <div class="rpager__nums">
+            {% for p in (1..num_pages) %}
+              <label class="rpager__num" for="rp-{{ p }}">{% if p < 10 %}0{% endif %}{{ p }}</label>
+            {% endfor %}
+          </div>
+          <span class="cap rpager__label">{{ total }} works · {{ num_pages }} pages</span>
+        </nav>
+      {% endif %}
+
+      {% for p in (1..num_pages) %}
+        {% assign start = p | minus: 1 | times: per_page %}
+        {% assign page_items = research_posts | slice: start, per_page %}
+        <div class="rpage rpage--{{ p }}">
+          {% assign page_by_year = page_items | group_by_exp: "post", "post.date | date: '%Y'" %}
+          {% for year_group in page_by_year %}
+            <section class="year-band">
+              <div class="year-band__rail">
+                <div class="year-band__year">{{ year_group.name }}</div>
+                {% assign n = year_group.items | size %}
+                <span class="cap year-band__count">
+                  {% if n < 10 %}0{% endif %}{{ n }} {% if n == 1 %}item{% else %}items{% endif %}
+                </span>
+                <div class="year-band__rule"></div>
+              </div>
+              <div>
+                {% for post in year_group.items %}
+                  <article class="pub">{{ post.content }}</article>
+                {% endfor %}
+              </div>
+            </section>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+
+    {% comment %} ── Projects panel ── {% endcomment %}
+    <div class="tabs__panel tabs__panel--projects" role="tabpanel">
+      {% assign projects_by_year = project_posts | group_by_exp: "post", "post.date | date: '%Y'" %}
+      {% for year_group in projects_by_year %}
+        <section class="year-band">
+          <div class="year-band__rail">
+            <div class="year-band__year">{{ year_group.name }}</div>
+            {% assign n = year_group.items | size %}
+            <span class="cap year-band__count">
+              {% if n < 10 %}0{% endif %}{{ n }} {% if n == 1 %}item{% else %}items{% endif %}
+            </span>
+            <div class="year-band__rule"></div>
+          </div>
+          <div>
+            {% for post in year_group.items %}
+              <article class="pub">{{ post.content }}</article>
+            {% endfor %}
+          </div>
+        </section>
+      {% endfor %}
+
+      <div class="kofi">
+        <div>
+          <div class="kofi__title">If you enjoy my work, you can support me on Ko-fi.</div>
+          <div class="kofi__sub">Thanks!</div>
+        </div>
+        <a class="cta" href="https://ko-fi.com/inrainbws" target="_blank" rel="noreferrer">
+          SUPPORT ON KO-FI ↗
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+{% comment %} Section 02 — Talks {% endcomment %}
+<section class="section">
+  <header class="section-head">
+    <div>
+      <h2 class="section-head__title">Talks</h2>
+    </div>
+    <span class="cap">1 entry</span>
+  </header>
+
+  <div class="talk">
+    <div class="talk__date">Feb 2026</div>
+    <div>
+      <h3 class="talk__title">Weight Space Representation Learning via Neural Field Adaptation</h3>
+      <div class="talk__venue">Invited talk at AI:ML Group, University of St. Gallen</div>
+    </div>
+    <a class="chip talk__chip" href="https://actu.epfl.ch/news/talk-by-zhuoqian-yang-at-university-of-st-gallen/">announcement</a>
+  </div>
+</section>
+
+
+{% comment %} Section 03 — Academic services {% endcomment %}
+<section class="section">
+  <header class="section-head">
+    <div>
+      <h2 class="section-head__title">Academic Services</h2>
+    </div>
+  </header>
+
+  <div class="services__row">
+    <span class="cap">Volunteer</span>
+    <div class="services__value"><em>ICCP</em> 2024, Lausanne</div>
+  </div>
+  <div class="services__row">
+    <span class="cap">Teaching</span>
+    <div class="services__list">
+      <div>CS-341 Computer Graphics, Spring 2024, EPFL</div>
+      <div>CS-233 Intro to Machine Learning, Spring 2026, EPFL</div>
+    </div>
+  </div>
+  <div class="services__row">
+    <span class="cap">Reviewer</span>
+    <div class="services__chips">
+      <span class="services__chip">CVPR</span>
+      <span class="services__chip">ECCV</span>
+      <span class="services__chip">AAAI</span>
+      <span class="services__chip">ICLR</span>
+      <span class="services__chip">ACM MM</span>
+    </div>
+  </div>
+</section>
+
+
+{% comment %} Section 04 — Misc / music {% endcomment %}
+<section class="section">
+  <header class="section-head">
+    <div>
+      <h2 class="section-head__title">Misc.</h2>
+    </div>
+    <!-- <span class="cap">Original</span> -->
+  </header>
+
+  <div class="misc__card">
+    <div class="misc__row">
+      <div>
+        <div class="misc__title">Check out my original music</div>
+        <div class="misc__sub">I compose, arrange, record and produce. No AI involved.</div>
+      </div>
+      <a class="cta" href="https://open.spotify.com/track/6Xd2oVpeYPY2DuyOZeHE6j" target="_blank" rel="noreferrer">
+        <span class="cta__play"></span>
+        OPEN IN SPOTIFY ↗
+      </a>
+    </div>
+    <iframe title="Spotify"
+      src="https://open.spotify.com/embed/track/6Xd2oVpeYPY2DuyOZeHE6j?utm_source=generator&theme=0"
+      width="100%" height="80" frameborder="0"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      loading="lazy" style="border: 0; background: transparent; border-radius: 8px;"></iframe>
+  </div>
+</section>
+
+
+<footer class="site-footer">
+  <span class="cap">© {{ site.author }} · {{ site.time | date: '%Y' }}</span>
+  <a class="site-footer__top" href="#top">↑ To top</a>
+</footer>

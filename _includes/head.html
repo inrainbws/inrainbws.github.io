@@ -1,0 +1,35 @@
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>{{ site.title }}</title>
+  <meta name="description" content="{{ site.description }}">
+  <meta name="author" content="{{ site.author }}">
+
+  <!-- Open Graph -->
+  <meta property="og:url" content="{{ site.url }}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ site.title }}">
+  <meta property="og:description" content="{{ site.description }}">
+  <meta property="og:image" content="{{ site.url }}/images/favicon.png">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{{ site.title }}">
+  <meta name="twitter:description" content="{{ site.description }}">
+  <meta name="twitter:image" content="{{ site.url }}/images/favicon.png">
+
+  <!-- Feeds -->
+  <link href="{{ '/atom.xml' | prepend: site.baseurl }}" type="application/atom+xml" rel="alternate" title="ATOM feed">
+  <link href="{{ '/feed.xml' | prepend: site.baseurl }}" type="application/rss+xml" rel="alternate" title="RSS feed">
+
+  <link rel="shortcut icon" href="{{ '/images/favicon.png' | prepend: site.baseurl }}">
+
+  <!-- Fonts: Optimistic Display (titles, self-hosted), Newsreader (body serif), Instrument Serif (dates only), IBM Plex Mono (caps) -->
+  <link rel="preload" href="{{ '/assets/fonts/optimistic-display-semibold.woff2' | prepend: site.baseurl }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Instrument+Serif&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+  <link rel="stylesheet" href="{{ '/assets/css/site.css' | prepend: site.baseurl }}">
+</head>
