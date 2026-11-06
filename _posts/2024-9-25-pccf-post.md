@@ -12,7 +12,7 @@ title:  "Counterfactual Explanations for 3D Point-Cloud Classifiers"
   </div>
   <h3 class="pub__title">Counterfactual Explanations for 3D Point-Cloud Classifiers</h3>
   <p class="pub__authors">
-    Yann Bouquet, <span class="pub__authors-me">Zhuoqian Yang</span>, Mathieu Salzmann
+    Yann Bouquet, <span class="pub__authors-me">me</span>, Mathieu Salzmann
   </p>
   <div class="pub__links">
     <a class="chip chip--primary" href="https://openreview.net/forum?id=XQED8Nk9mu">paper</a>

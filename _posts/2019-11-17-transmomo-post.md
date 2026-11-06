@@ -12,7 +12,7 @@ title:  "TransMoMo: Invariance-Driven Unsupervised Video Motion Retargeting"
   </div>
   <h3 class="pub__title">TransMoMo: Invariance-Driven Unsupervised Video Motion Retargeting</h3>
   <p class="pub__authors">
-    <span class="pub__authors-me">Zhuoqian Yang*</span>, Wentao Zhu*, Wayne Wu*, Chen Qian, Qiang Zhou, Bolei Zhou, Chen Change Loy
+    <span class="pub__authors-me">me*</span>, Wentao Zhu*, Wayne Wu*, Chen Qian, Qiang Zhou, Bolei Zhou, Chen Change Loy
   </p>
   <p class="pub__note">* equal contribution</p>
   <div class="pub__links">

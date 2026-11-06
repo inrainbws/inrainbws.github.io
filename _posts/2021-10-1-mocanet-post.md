@@ -12,7 +12,7 @@ title:  "MoCaNet: Motion Retargeting in-the-wild via Canonicalization Networks"
   </div>
   <h3 class="pub__title">MoCaNet: Motion Retargeting in-the-wild via Canonicalization Networks</h3>
   <p class="pub__authors">
-    Wentao Zhu*, <span class="pub__authors-me">Zhuoqian Yang*</span>, Ziang Di, Wayne Wu, Yizhou Wang, CC Loy
+    Wentao Zhu*, <span class="pub__authors-me">me*</span>, Ziang Di, Wayne Wu, Yizhou Wang, CC Loy
   </p>
   <p class="pub__note">* equal contribution</p>
   <div class="pub__links">

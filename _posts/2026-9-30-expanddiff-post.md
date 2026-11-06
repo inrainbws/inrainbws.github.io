@@ -12,7 +12,7 @@ title:  "ExpandDiff: Dynamic Range Expanding Diffusion for Single-Image HDR Reco
   </div>
   <h3 class="pub__title">ExpandDiff: Dynamic Range Expanding Diffusion for Single-Image HDR Reconstruction</h3>
   <p class="pub__authors">
-    Mehmet Emre Andıran, <span class="pub__authors-me">Zhuoqian Yang</span>, Liying Lu, Mathieu Salzmann, Sabine Süsstrunk
+    Emre Andıran, <span class="pub__authors-me">me</span>, Liying Lu, M. Salzmann, S. Süsstrunk
   </p>
   <div class="pub__links">
     <a class="chip chip--primary" href="https://memreandiran.github.io/expanddiff/">project page</a>

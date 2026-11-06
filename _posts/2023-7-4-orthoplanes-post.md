@@ -12,7 +12,7 @@ title:  "OrthoPlanes: A Novel Representation for Better 3D-Awareness of GANs"
   </div>
   <h3 class="pub__title">OrthoPlanes: A Novel Representation for Better 3D-Awareness of GANs</h3>
   <p class="pub__authors">
-    Honglin He*, <span class="pub__authors-me">Zhuoqian Yang*</span>, Shikai Li, Bo Dai, Wayne Wu
+    Honglin He*, <span class="pub__authors-me">me*</span>, Shikai Li, Bo Dai, Wayne Wu
   </p>
   <p class="pub__note">* equal contribution</p>
   <div class="pub__links">

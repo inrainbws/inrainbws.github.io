@@ -12,7 +12,7 @@ title:  "MEAD: A Large-scale Audio-visual Dataset for Emotional Talking-Face Gen
   </div>
   <h3 class="pub__title">MEAD: A Large-scale Audio-visual Dataset for Emotional Talking-Face Generation</h3>
   <p class="pub__authors">
-    Kaisiyuan Wang*, Qianyi Wu*, Linsen Song*, <span class="pub__authors-me">Zhuoqian Yang</span>, Wayne Wu, Chen Qian, Ran He, Yu Qiao, Chen Change Loy
+    Kaisiyuan Wang*, Qianyi Wu*, Linsen Song*, <span class="pub__authors-me">me</span>, Wayne Wu, Chen Qian, Ran He, Yu Qiao, Chen Change Loy
   </p>
   <p class="pub__note">* equal contribution</p>
   <div class="pub__links">

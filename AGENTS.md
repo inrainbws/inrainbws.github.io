@@ -85,7 +85,7 @@ Post body template:
   </div>
   <h3 class="pub__title">Paper Title</h3>
   <p class="pub__authors">
-    Coauthor A, <span class="pub__authors-me">Zhuoqian Yang</span>, Coauthor B
+    Coauthor A, <span class="pub__authors-me">me</span>, Coauthor B
   </p>
   <!-- optional: <p class="pub__note">* equal contribution</p> -->
   <div class="pub__links">
@@ -99,7 +99,7 @@ Post body template:
 Rules when authoring a post body:
 
 - Thumbnail column is exactly 220px (`.pub__thumb-wrap`; `.pub__thumb` has `aspect-ratio: 16/9`). Make thumbnail images 16:9; don't override.
-- Every occurrence of `Zhuoqian Yang` in `.pub__authors` — including the starred form `Zhuoqian Yang*` — must be wrapped in `<span class="pub__authors-me">…</span>`.
+- In `.pub__authors`, write the author's own name as just `me` (or `me*` for equal contribution), wrapped in `<span class="pub__authors-me">…</span>`. Never spell out `Zhuoqian Yang` in author lists.
 - The **first** link in `.pub__links` is the primary chip (`chip chip--primary`). Usually "project page" if one exists, otherwise "paper". Only one primary per row.
 - For papers without a thumbnail image, use a placeholder:
   ```html
