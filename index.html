@@ -27,85 +27,35 @@ layout: default
           <label class="tabs__tab" for="tab-projects" role="tab">Projects<span class="tabs__count">{% assign pc = project_posts | size %}{% if pc < 10 %}0{% endif %}{{ pc }}</span></label>
         </h2>
       </div>
-      <div class="section-head__meta">
-        <span class="cap">Updated</span>
-        <div class="section-head__meta-date">{{ site.posts.first.date | date: '%Y · %m · %d' }}</div>
-      </div>
     </header>
 
     {% comment %}
       ── Research panel ──
-      Paginated at 6 items per page so the section stays short. Pages are
-      CSS-only (radio inputs), same no-JS pattern as the tabs. Each page is
-      still grouped into year-bands; a year that straddles a page break simply
-      reappears on the next page.
+      A second, smaller CSS-only switch: Selected (posts with `selected: true`
+      in front matter — the papers listed in the CV) / All. Each view is
+      grouped into year-bands by the year-bands include.
     {% endcomment %}
+    {% assign selected_posts = research_posts | where: "selected", true %}
     <div class="tabs__panel tabs__panel--research" role="tabpanel">
-      {% assign per_page = 6 %}
-      {% assign total = research_posts | size %}
-      {% assign num_pages = total | plus: per_page | minus: 1 | divided_by: per_page %}
+      <input type="radio" name="research-view" id="rv-selected" class="rview__input" checked>
+      <input type="radio" name="research-view" id="rv-all" class="rview__input">
 
-      {% for p in (1..num_pages) %}
-        <input type="radio" name="research-page" id="rp-{{ p }}" class="rpage__input"{% if p == 1 %} checked{% endif %}>
-      {% endfor %}
+      <nav class="rswitch" role="tablist" aria-label="Research view">
+        <label class="rswitch__tab" for="rv-selected" role="tab">Selected<span class="rswitch__count">{% assign sc = selected_posts | size %}{% if sc < 10 %}0{% endif %}{{ sc }}</span></label>
+        <label class="rswitch__tab" for="rv-all" role="tab">All<span class="rswitch__count">{% if rc < 10 %}0{% endif %}{{ rc }}</span></label>
+      </nav>
 
-      {% if num_pages > 1 %}
-        <nav class="rpager" aria-label="Research pages">
-          <div class="rpager__nums">
-            {% for p in (1..num_pages) %}
-              <label class="rpager__num" for="rp-{{ p }}">{% if p < 10 %}0{% endif %}{{ p }}</label>
-            {% endfor %}
-          </div>
-          <span class="cap rpager__label">{{ total }} works · {{ num_pages }} pages</span>
-        </nav>
-      {% endif %}
-
-      {% for p in (1..num_pages) %}
-        {% assign start = p | minus: 1 | times: per_page %}
-        {% assign page_items = research_posts | slice: start, per_page %}
-        <div class="rpage rpage--{{ p }}">
-          {% assign page_by_year = page_items | group_by_exp: "post", "post.date | date: '%Y'" %}
-          {% for year_group in page_by_year %}
-            <section class="year-band">
-              <div class="year-band__rail">
-                <div class="year-band__year">{{ year_group.name }}</div>
-                {% assign n = year_group.items | size %}
-                <span class="cap year-band__count">
-                  {% if n < 10 %}0{% endif %}{{ n }} {% if n == 1 %}item{% else %}items{% endif %}
-                </span>
-                <div class="year-band__rule"></div>
-              </div>
-              <div>
-                {% for post in year_group.items %}
-                  <article class="pub">{{ post.content }}</article>
-                {% endfor %}
-              </div>
-            </section>
-          {% endfor %}
-        </div>
-      {% endfor %}
+      <div class="rview rview--selected" role="tabpanel">
+        {% include year-bands.html posts=selected_posts %}
+      </div>
+      <div class="rview rview--all" role="tabpanel">
+        {% include year-bands.html posts=research_posts %}
+      </div>
     </div>
 
     {% comment %} ── Projects panel ── {% endcomment %}
     <div class="tabs__panel tabs__panel--projects" role="tabpanel">
-      {% assign projects_by_year = project_posts | group_by_exp: "post", "post.date | date: '%Y'" %}
-      {% for year_group in projects_by_year %}
-        <section class="year-band">
-          <div class="year-band__rail">
-            <div class="year-band__year">{{ year_group.name }}</div>
-            {% assign n = year_group.items | size %}
-            <span class="cap year-band__count">
-              {% if n < 10 %}0{% endif %}{{ n }} {% if n == 1 %}item{% else %}items{% endif %}
-            </span>
-            <div class="year-band__rule"></div>
-          </div>
-          <div>
-            {% for post in year_group.items %}
-              <article class="pub">{{ post.content }}</article>
-            {% endfor %}
-          </div>
-        </section>
-      {% endfor %}
+      {% include year-bands.html posts=project_posts %}
 
       <div class="kofi">
         <div>

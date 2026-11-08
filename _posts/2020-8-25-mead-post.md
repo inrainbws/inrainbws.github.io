@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "MEAD: A Large-scale Audio-visual Dataset for Emotional Talking-Face Generation"
+selected: true
 ---
 
 <div class="pub__thumb-wrap">

@@ -1,0 +1,18 @@
+{% comment %}
+  Renders a list of posts (newest-first) as year-bands.
+  Usage: {% include year-bands.html posts=some_posts %}
+{% endcomment %}
+{% assign _by_year = include.posts | group_by_exp: "post", "post.date | date: '%Y'" %}
+{% for year_group in _by_year %}
+  <section class="year-band">
+    <div class="year-band__rail">
+      <div class="year-band__year">{{ year_group.name }}</div>
+      <div class="year-band__rule"></div>
+    </div>
+    <div>
+      {% for post in year_group.items %}
+        <article class="pub">{{ post.content }}</article>
+      {% endfor %}
+    </div>
+  </section>
+{% endfor %}

@@ -44,7 +44,7 @@ If `STYLE_GUIDE.md` and `site.css` conflict, the CSS wins — fix the guide.
 
 ### Site Structure
 
-- **`index.html`** — Main page. Renders four `<section class="section">` blocks (Research/Projects tabs, Talks, Academic Services, Misc — no `§` numbering). Publications use Liquid's `group_by_exp` to bucket posts by year into `.year-band` blocks; **you no longer maintain numbered `site.posts[N]` references**, so adding or reordering posts just works.
+- **`index.html`** — Main page. Renders four `<section class="section">` blocks (Research/Projects tabs, Talks, Academic Services, Misc — no `§` numbering). Publications use Liquid's `group_by_exp` to bucket posts by year into `.year-band` blocks; **you no longer maintain numbered `site.posts[N]` references**, so adding or reordering posts just works. The Research tab has a CSS-only `Selected / All` switch (`.rswitch`, radios `#rv-selected` / `#rv-all`): Selected shows posts with `selected: true` in front matter (the papers listed in the CV's Publications section), All shows every research post. Year-band rendering is shared via `_includes/year-bands.html` (`{% include year-bands.html posts=... %}`).
 
 - **`_posts/`** — Each file is one publication card (not a blog post). Filename format: `YYYY-M-D-slug.md`. Front matter is `layout: post` + `title:`. The body is an HTML fragment using the new `.pub__*` markup (see "Adding a Publication" below).
 
@@ -68,7 +68,7 @@ If `STYLE_GUIDE.md` and `site.css` conflict, the CSS wins — fix the guide.
 
 ### Adding a New Publication
 
-1. Create `_posts/YYYY-M-D-shortname-post.md` with front matter `layout: post` and a `title:` field.
+1. Create `_posts/YYYY-M-D-shortname-post.md` with front matter `layout: post` and a `title:` field. Add `selected: true` if the paper is also listed in the CV (`~/me/CV/EN/CV.tex`, `publist`) so it appears under the Selected view.
 2. Add the paper thumbnail to `assets/images/`.
 3. In the post body, use the `.pub__*` pattern below. **No edit to `index.html` needed** — `group_by_exp` picks it up automatically and slots it into the right year band.
 

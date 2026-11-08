@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "OrthoPlanes: A Novel Representation for Better 3D-Awareness of GANs"
+selected: true
 ---
 
 <div class="pub__thumb-wrap">

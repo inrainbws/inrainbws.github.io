@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "TransMoMo: Invariance-Driven Unsupervised Video Motion Retargeting"
+selected: true
 ---
 
 <div class="pub__thumb-wrap">
